@@ -1,0 +1,4 @@
+<p>You could use SQL's random function (RAND() or RANDOM() depending on database engine) - but this isn't database agnostic, so isn't really very quick.</p>&#13;
+<p>Instead you can use <a href="http://www.twitter.com/nzkoz">@nzkoz</a>'s suggested method:</p>&#13;
+<p><code> Widget.first(:offset =&gt; Widget.count) </code></p>&#13;
+<p>.... the count() method is fast, and the first() method will limit it to the first result in the SQL as well.</p> 

@@ -1,0 +1,14 @@
+<p>RSpec 2 has supported integration tests for a while now, and I've chosen to use these for a project I'm working on at the moment instead of Cucumber (I don't feel that I need the verbosity and English-like structure Cucumber provides given that it a more complex process to write tests).</p>&#13;
+<p>A bit of a problem I've come across recently is how to get a Devise user signed in to your application in your tests, given that integration tests don't really give you any access to either the session or the controller (This rules out manually setting ID's in the session, or stubbing out current_user. As it turns out, the implementation of it is pretty simple, but I did have to do a bit of browsing and piece a few bits together to work out a nice way of doing it.</p>&#13;
+<p>Here is the code you can use (You would normally place this within a before(:each) filter in your routes spec (Which is what an integration test in RSpec is called):</p>&#13;
+<p>[At top of spec file, after require 'spec_helper'</p>&#13;
+<p><code> include Warden::Test::Helpers</code></p>&#13;
+<p>[In a before(:each) block]</p>&#13;
+<p><code> @user = Factory.create(:user) </code></p>&#13;
+<p><code>@user.confirm! </code></p>&#13;
+<p><code>login_as @user, :scope =&gt; :user </code></p>&#13;
+<p>Now, what is this doing? Well, first of all, you include some test helpers that Warden (Which devise back-ends onto), provides. I tried out using Devise's Devise::TestHelpers here, but it looks like Devise haven't really designed their helpers with integration tests in mind - they didn't really work. </p>&#13;
+<p>Within our before(:each) block, it now gets pretty simple. We create a User, using Factory Girl (This part of the implementation doesn't really matter, you can use fixtures if you prefer, or even a plain old User.create.</p>&#13;
+<p>Next, we confirm the user. This isn't necessary if your users haven't been marked as :confirmable in your User model, but obviously our new user needs to be confirmed and active in order to log in.</p>&#13;
+<p>Last of all, we use a helper method Warden's test helpers has provided us to log in the user, which sets us up for any more requests we need to make.</p>&#13;
+<p>Have fun speccing nicely with Devise/Warden and RSpec!</p> 

@@ -1,0 +1,18 @@
+<p>[This is cross-posted from a <a href="http://twitter.com/#!/sudojosh/status/69233759446249472">tweet</a> I posted a while back - I think it's a nice bit of advice, and I wanted to store it in a more persistent form]</p>&#13;
+<p>Installing ImageMagick is one of the things that Rails developers need to do reasonably often when provisioning new servers - basically, if you're doing any sort of image processing in your application (including the popular<a href="https://github.com/thoughtbot/paperclip"> Paperclip</a> gem), ImageMagick is what you'll be using.</p>&#13;
+<p>The problem is that there is a bit of a magical formula I have needed to use in the past - if you just install ImageMagick, it will most likely not work, as it needs to have support for different image formats you want to use compiled it in right from the get go. Previously, I have just looked up the various libraries I have needed (For PNG, JPEG, etc.), and then either found the libraries in the Ubuntu package repositories or built them from source. </p>&#13;
+<p>A nice quick way of doing it though, is to use an ImageMagick meta-package in the Ubuntu repositories named libmagick-9-dev - it is just a collection of popular image format libraries, as well as a couple of additional utilities for ImageMagick. You can install it on any Ubuntu system by running this command:</p>&#13;
+<p><code> sudo apt-get install libmagick-9-dev </code></p>&#13;
+<p>ImageMagick itself still needs to be installed, of course. The best option here is just to build from source - packages in the repositories are horribly out of date, and I have found Paperclip, RMagick and Minimagick all require a fairly recent version of ImageMagick.</p>&#13;
+<p>Building from source sounds really intimidating, but it really isn't - just follow these steps:</p>&#13;
+<p>First of all, download a tarball of the ImageMagick source onto your computer:</p>&#13;
+<p><code>wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz</code></p>&#13;
+<p>Next, extract the tarball:</p>&#13;
+<p><code>tar -xvzf ImageMagick.tar.gz</code></p>&#13;
+<p>Now configure the package - note especially the end of the output (There is a lot of output) - it tells you which Image libraries you have installed - any with 'yes' next to them it will happily format and convert - because you've installed the package above, all the common formats should have a 'yes' next to them, but it's worth checking.</p>&#13;
+<p><code>cd ImageMagick-[VERSION] (VERSION will be a series of numbers like '6.7.0-8')<br />./configure</code></p>&#13;
+<p>Now all the hard work (By you) is done - you just need to compile the packages:</p>&#13;
+<p><code>make &amp;&amp; sudo make install</code></p>&#13;
+<p><strong>All done!</strong> - ImageMagick should be all installed. To check, run the command <code>which identify</code>, and check it returns a path to the 'identify' command.</p>&#13;
+<p><em>Note:</em> If you have trouble compiling, make sure Ubunutu's build tools are installed: <code>sudo apt-get install build-essential</code></p>&#13;
+ 

@@ -1,0 +1,11 @@
+<p>Every now and then, you run into one of THOSE problems - inexplicable, and something it seems no one else has solved before you. This afternoon, I hit one of these. Basically, I had just installed <a title="Ruby Version Manager" href="http://rvm.beginrescueend.com/">RVM</a>, <a title="Ruby Programming Language" href="http://www.ruby-lang.org">Ruby 1.8.7</a> and <a title="Ruby on Rails Framework" href="http://www.rubyonrails.org">Rails 2.3.8</a> - everything was working great - I could run a server just fine, and use the running site.</p>&#13;
+<p>Eventually though, I found something broken. Easy enough to diagnose, I thought - I'll just start up a debugging server, and work out whats going on.</p>&#13;
+<p>Wrong. Wrong, wrong, wrong.</p>&#13;
+<p>What followed was a continuation of this error:</p>&#13;
+<p><code> You need to install ruby-debug to run the server in debugging mode. <br /></code></p>&#13;
+<p>So I had a Google - lots of people have run into this problem before (<a href="http://groups.google.com/group/rubyversionmanager/msg/1dcd4235354c873e">here</a> and <a href="http://dev.rubyonrails.org/ticket/10593">here</a> specifically) - the problem is, most of these problems came down to a missing library called <em>libreadline</em> - for them, installing the library corrected all of their problems.</p>&#13;
+<p>In the end, I stumbled across <a href="http://help.rubygems.org/discussions/problems/272-ruby-debug-with-snow-leopard">this post</a>, from a guy having issues with Ruby after upgrading his Mac OS X - finally - he suggested something I hadn't already tried.</p>&#13;
+<p>And, as it turns out - it worked! I have no idea why - but there we go.</p>&#13;
+<p><strong>If you are having a problem getting Ruby 1.8.7 to acknowledge ruby-debug is there when running a debugging server, try this:</strong></p>&#13;
+<p><code> gem uninstall ruby-debug gem install ruby-debug linecache --no-ri --no-rdoc script/server --debugger </code></p>&#13;
+<p>... It might just work for you!</p> 
