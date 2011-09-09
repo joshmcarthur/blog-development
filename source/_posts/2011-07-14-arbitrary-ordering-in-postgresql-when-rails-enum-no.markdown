@@ -1,6 +1,6 @@
 ---
 title: Arbitrary Ordering in PostgreSQL when Rails + ENUM = No.
-layout: default
+layout: page
 
 type: regular
 ---

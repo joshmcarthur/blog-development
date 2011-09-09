@@ -1,6 +1,6 @@
 ---
 title: RVM, Ruby-Debug, and hours of frustration
-layout: default
+layout: page
 tags:
   - rails
   - rvm

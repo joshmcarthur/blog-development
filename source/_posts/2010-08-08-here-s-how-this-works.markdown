@@ -1,6 +1,6 @@
 ---
 title: Here's how this works...
-layout: default
+layout: page
 
 type: regular
 ---

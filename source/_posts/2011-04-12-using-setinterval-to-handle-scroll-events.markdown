@@ -1,6 +1,6 @@
 ---
 title: Using setInterval to handle scroll() events
-layout: default
+layout: page
 
 type: regular
 ---

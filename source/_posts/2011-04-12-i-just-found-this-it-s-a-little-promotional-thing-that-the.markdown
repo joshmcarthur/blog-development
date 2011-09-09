@@ -1,6 +1,6 @@
 ---
 title: I just found this - it's a little promotional thing that the...
-layout: default
+layout: page
 
 type: photo
 ---

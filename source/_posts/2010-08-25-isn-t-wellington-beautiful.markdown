@@ -1,6 +1,6 @@
 ---
 title: Isn't Wellington beautiful?!
-layout: default
+layout: page
 
 type: photo
 ---

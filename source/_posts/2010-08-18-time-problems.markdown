@@ -1,6 +1,6 @@
 ---
 title: Time Problems
-layout: default
+layout: page
 
 type: regular
 ---

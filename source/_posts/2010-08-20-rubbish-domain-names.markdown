@@ -1,6 +1,6 @@
 ---
 title: Rubbish Domain Names
-layout: default
+layout: page
 
 type: regular
 ---

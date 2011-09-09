@@ -1,6 +1,6 @@
 ---
 title: Accessing controller instance variables in model (Urgh?)
-layout: default
+layout: page
 
 type: regular
 ---

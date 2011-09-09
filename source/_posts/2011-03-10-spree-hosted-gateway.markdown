@@ -1,6 +1,6 @@
 ---
 title: Spree Hosted Gateway
-layout: default
+layout: page
 
 type: regular
 ---

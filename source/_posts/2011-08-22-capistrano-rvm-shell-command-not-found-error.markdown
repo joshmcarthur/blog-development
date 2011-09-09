@@ -1,6 +1,6 @@
 ---
 title: "Capistrano rvm-shell: command not found error"
-layout: default
+layout: page
 
 type: regular
 ---

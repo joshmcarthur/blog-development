@@ -1,6 +1,6 @@
 ---
 title: OK, So I Was Wrong
-layout: default
+layout: page
 
 type: link
 ---

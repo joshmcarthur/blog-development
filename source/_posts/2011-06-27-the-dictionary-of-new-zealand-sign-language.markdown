@@ -1,6 +1,6 @@
 ---
 title: The Dictionary of New Zealand Sign Language
-layout: default
+layout: page
 tags:
   - work
 

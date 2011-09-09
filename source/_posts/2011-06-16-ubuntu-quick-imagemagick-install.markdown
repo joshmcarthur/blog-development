@@ -1,6 +1,6 @@
 ---
 title: "Ubuntu: Quick ImageMagick Install"
-layout: default
+layout: page
 
 type: regular
 ---

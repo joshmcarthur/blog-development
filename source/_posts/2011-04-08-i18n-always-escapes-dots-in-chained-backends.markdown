@@ -1,6 +1,6 @@
 ---
 title: I18n ALWAYS escapes dots in chained backends :-(
-layout: default
+layout: page
 
 type: regular
 ---

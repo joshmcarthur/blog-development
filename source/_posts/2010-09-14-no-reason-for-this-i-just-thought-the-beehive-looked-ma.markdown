@@ -1,6 +1,6 @@
 ---
 title: No reason for this. I just thought the Beehive looked.... ma...
-layout: default
+layout: page
 
 type: photo
 ---

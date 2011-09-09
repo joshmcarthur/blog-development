@@ -1,6 +1,6 @@
 ---
 title: Interesting Ideas
-layout: default
+layout: page
 
 type: regular
 ---

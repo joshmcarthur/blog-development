@@ -1,6 +1,6 @@
 ---
 title: "Quick: Clear Gemset"
-layout: default
+layout: page
 
 type: regular
 ---
