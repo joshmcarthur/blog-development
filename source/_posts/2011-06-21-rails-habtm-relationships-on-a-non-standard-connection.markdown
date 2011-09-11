@@ -1,6 +1,6 @@
 ---
 title: Rails HABTM relationships on a non-standard connection
-layout: default
+layout: page
 tags:
   - rails
   - active_record

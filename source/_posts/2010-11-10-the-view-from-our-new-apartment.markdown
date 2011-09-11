@@ -1,6 +1,6 @@
 ---
-title: The view from our new apartment 
-layout: default
+title: The view from our new apartment
+layout: page
 
 type: photo
 ---

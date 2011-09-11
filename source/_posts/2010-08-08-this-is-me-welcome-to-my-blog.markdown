@@ -1,6 +1,6 @@
 ---
-title: This is me. Welcome to my blog :-) 
-layout: default
+title: This is me. Welcome to my blog :-)
+layout: page
 
 type: photo
 ---

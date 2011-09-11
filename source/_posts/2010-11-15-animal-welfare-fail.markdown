@@ -1,6 +1,6 @@
 ---
-title: Animal Welfare Fail? 
-layout: default
+title: Animal Welfare Fail?
+layout: page
 tags:
   - animal
   - fail

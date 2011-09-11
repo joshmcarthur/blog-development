@@ -1,6 +1,6 @@
 ---
 title: Code Monsters
-layout: default
+layout: page
 
 type: regular
 ---

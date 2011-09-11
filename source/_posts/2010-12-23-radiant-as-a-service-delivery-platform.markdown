@@ -1,6 +1,6 @@
 ---
 title: Radiant as a Service-delivery Platform
-layout: default
+layout: page
 
 type: regular
 ---

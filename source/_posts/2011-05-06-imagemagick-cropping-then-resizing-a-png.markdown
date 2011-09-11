@@ -1,6 +1,6 @@
 ---
 title: "ImageMagick: Cropping then Resizing a PNG"
-layout: default
+layout: page
 tags:
   - mini_magick
   - image_magick

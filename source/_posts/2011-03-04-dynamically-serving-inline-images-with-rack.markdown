@@ -1,6 +1,6 @@
 ---
 title: Dynamically Serving Inline Images with Rack
-layout: default
+layout: page
 
 type: regular
 ---

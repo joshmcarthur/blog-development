@@ -1,6 +1,6 @@
 ---
 title: "Quick: .rvmrc"
-layout: default
+layout: page
 
 type: regular
 ---

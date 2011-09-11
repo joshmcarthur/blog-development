@@ -1,6 +1,6 @@
 ---
 title: Ah, the Rugby Sevens (It's a hot day).
-layout: default
+layout: page
 
 type: photo
 ---

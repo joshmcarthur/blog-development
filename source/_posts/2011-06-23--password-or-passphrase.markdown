@@ -1,6 +1,6 @@
 ---
 title: "'Password' or 'Passphrase'"
-layout: default
+layout: page
 
 type: regular
 ---

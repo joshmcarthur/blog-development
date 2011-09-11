@@ -1,6 +1,6 @@
 ---
 title: A handy tip
-layout: default
+layout: page
 
 type: regular
 ---

@@ -1,6 +1,6 @@
 ---
 title: Achievements on Coderwall
-layout: default
+layout: page
 
 type: regular
 ---

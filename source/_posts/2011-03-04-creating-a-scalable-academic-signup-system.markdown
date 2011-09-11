@@ -1,6 +1,6 @@
 ---
 title: Creating a Scalable Academic Signup System
-layout: default
+layout: page
 
 type: regular
 ---
@@ -17,7 +17,8 @@ is. The problem is though, is that its performance under load is crap - it
 simply was not build for the load that it receives when tutorial signups for 2
 courses of 700 people each opens at 9am, and each of those 1400 people trying
 to get the exact tutorial they want are continually refereshing the page and so
-exacerbating the server load even more.Â 
+exacerbating the server load even more.
+
 This server load doesn't just extend to slow page load speed - since the site
 has not been build with scalability in mind, there have been ongoing issues
 with sessions expiring as people try and signup for a tutorial or workshop,

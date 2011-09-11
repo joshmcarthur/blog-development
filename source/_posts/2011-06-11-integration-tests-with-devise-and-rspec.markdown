@@ -1,6 +1,6 @@
 ---
 title: Integration tests with Devise and RSpec
-layout: default
+layout: page
 
 type: regular
 ---

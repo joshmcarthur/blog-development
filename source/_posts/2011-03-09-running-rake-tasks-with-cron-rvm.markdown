@@ -1,6 +1,6 @@
 ---
 title: Running Rake tasks with Cron (RVM)
-layout: default
+layout: page
 
 type: regular
 ---

@@ -1,6 +1,6 @@
 ---
-title: Donuts with Gemma outside Parliament 
-layout: default
+title: Donuts with Gemma outside Parliament
+layout: page
 
 type: photo
 ---

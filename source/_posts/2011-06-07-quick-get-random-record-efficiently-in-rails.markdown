@@ -1,6 +1,6 @@
 ---
 title: "Quick: Get random record efficiently in Rails"
-layout: default
+layout: page
 
 type: regular
 ---

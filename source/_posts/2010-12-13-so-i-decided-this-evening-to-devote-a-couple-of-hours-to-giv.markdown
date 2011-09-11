@@ -1,6 +1,6 @@
 ---
 title: So I decided this evening to devote a couple of hours to giv...
-layout: default
+layout: page
 tags:
   - development
   - spree

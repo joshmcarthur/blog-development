@@ -1,6 +1,6 @@
 ---
 title: My new look...
-layout: default
+layout: page
 
 type: regular
 ---
