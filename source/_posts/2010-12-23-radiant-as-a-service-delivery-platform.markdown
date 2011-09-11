@@ -3,6 +3,7 @@ title: Radiant as a Service-delivery Platform
 layout: page
 
 type: regular
+comments: true
 ---
 
 Tonight I've been playing round with Radiant - it looks really impressive as a

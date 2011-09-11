@@ -3,6 +3,7 @@ title: "Quick: .rvmrc"
 layout: page
 
 type: regular
+comments: true
 ---
 
 This post is probably something more experienced RVM users will already know,

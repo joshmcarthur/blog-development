@@ -3,6 +3,7 @@ title: Rubbish Domain Names
 layout: page
 
 type: regular
+comments: true
 ---
 
 Finding appropriate domain names is a chore. There are so many rubbish parking

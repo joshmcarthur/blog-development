@@ -3,6 +3,7 @@ title: Integration tests with Devise and RSpec
 layout: page
 
 type: regular
+comments: true
 ---
 
 RSpec 2 has supported integration tests for a while now, and I've chosen to use

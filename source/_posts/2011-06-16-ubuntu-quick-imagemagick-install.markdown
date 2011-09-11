@@ -3,6 +3,7 @@ title: "Ubuntu: Quick ImageMagick Install"
 layout: page
 
 type: regular
+comments: true
 ---
 
 [This is cross-posted from a tweet I posted a while back - I think it's a nice

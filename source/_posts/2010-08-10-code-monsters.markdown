@@ -3,6 +3,7 @@ title: Code Monsters
 layout: page
 
 type: regular
+comments: true
 ---
 
 There is a monster in my code. Things keep breaking. Weird things. I think the

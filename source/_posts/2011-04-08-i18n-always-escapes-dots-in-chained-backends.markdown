@@ -3,6 +3,7 @@ title: I18n ALWAYS escapes dots in chained backends :-(
 layout: page
 
 type: regular
+comments: true
 ---
 
 Just a quick tip I've come across while browsing through the comments on a

@@ -3,6 +3,7 @@ title: Spree Hosted Gateway
 layout: page
 
 type: regular
+comments: true
 ---
 
 Spree Hosted Gateway is my second 'big' extension - one of the ones that isn't

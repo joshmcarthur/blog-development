@@ -3,6 +3,7 @@ title: Achievements on Coderwall
 layout: page
 
 type: regular
+comments: true
 ---
 
 Well, it's taken weeks for [Coderwall](http://coderwall.com) to finally get

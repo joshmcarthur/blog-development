@@ -3,6 +3,7 @@ title: The view from our new apartment
 layout: page
 
 type: photo
+comments: true
 ---
 
 [/images/assets/www.tumblr.com/photo/1280/1528893013/1/

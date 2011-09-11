@@ -8,6 +8,7 @@ tags:
   - linecache
 
 type: regular
+comments: true
 ---
 
 Every now and then, you run into one of THOSE problems - inexplicable, and

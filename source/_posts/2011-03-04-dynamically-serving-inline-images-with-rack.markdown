@@ -3,6 +3,7 @@ title: Dynamically Serving Inline Images with Rack
 layout: page
 
 type: regular
+comments: true
 ---
 
 Following an insanely interesting presentation by Steve Souders at Webstock, I

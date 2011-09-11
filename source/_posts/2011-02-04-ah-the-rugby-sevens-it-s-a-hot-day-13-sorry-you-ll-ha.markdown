@@ -3,6 +3,7 @@ title: Ah, the Rugby Sevens (It's a hot day).
 layout: page
 
 type: photo
+comments: true
 ---
 
 [/images/assets/www.tumblr.com/photo/1280/3095534425/1/

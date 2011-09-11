@@ -3,6 +3,7 @@ title: Using setInterval to handle scroll() events
 layout: page
 
 type: regular
+comments: true
 ---
 
 I've just added a nice unobtrusive scroll to top feature to my blog, and learnt

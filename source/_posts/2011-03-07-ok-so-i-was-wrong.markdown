@@ -3,6 +3,7 @@ title: OK, So I Was Wrong
 layout: page
 
 type: link
+comments: true
 ---
 
 OK,_So_I_Was_Wrong
