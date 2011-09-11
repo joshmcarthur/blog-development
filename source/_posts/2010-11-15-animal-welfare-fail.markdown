@@ -10,6 +10,6 @@ type: photo
 comments: true
 ---
 
-[/images/assets/30.media.tumblr.com/tumblr_lbwgpl8OPT1qd78luo1_400.png]
+[/images/posts/2010-11-15-animal-welfare.jpg]
 Animal Welfare Fail?
 

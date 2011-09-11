@@ -41,7 +41,7 @@ extendable, and used Spree's preferences system to allow any number of key-
 value pairs to be created (Which could be modified in the Spree Admin UI),
 which are automatically posted to the payment gateway when I customer is
 redirected (Unless the preference key is added to the exclusion list, of
-course!).Â 
+course!).
 I conjunction to the 'transmit' function of the extension, I have also
 implemented a kind of 'landing pad' for postbacks from the Payment Gateway to
 hit. When this happens, the extension is able to detect whether the transaction
