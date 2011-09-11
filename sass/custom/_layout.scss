@@ -20,3 +20,6 @@
     body > div#container > header { font-size: 0.7em; }
 }
 
+@media only screen and (min-width: 650px) {
+	body > div#container h1.entry-title { font-size: 2.2em; }
+}

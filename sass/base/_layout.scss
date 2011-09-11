@@ -106,6 +106,7 @@ body.sidebar-footer {
 
 @media only screen and (min-width: 550px) {
   body > div#container > header { font-size: 1em; }
+  body div#container h1.entry-title { font-size: 1.5em; }
 }
 @media only screen and (min-width: 750px) {
   aside[role=sidebar] { @include collapse-sidebar; }
@@ -113,6 +114,7 @@ body.sidebar-footer {
 @media only screen and (min-width: 768px) {
   body { -webkit-text-size-adjust: auto; }
   body > div#container > header { font-size: 1.2em; }
+  body div#container h1.entry-title { font-size: 2.2em; }
   #main {
     @extend .group;
     padding: 0;
