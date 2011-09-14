@@ -7,6 +7,7 @@ tags:
   - development
   - sinatra
   - github
+  - opensource
 ---
 
 I've just completed a Blog Broadcaster for this blog. It had a couple of interesting technical things, and I needed to test it properly, so here's this post!
