@@ -3,6 +3,7 @@ title: Dynamically Serving Inline Images with Rack
 layout: page
 
 type: regular
+comments: true
 ---
 
 Following an insanely interesting presentation by Steve Souders at Webstock, I
@@ -56,7 +57,7 @@ is to drop the Gem into my Gemfile, run bundle install, and register the
 middleware in my Application's configuration - from there on, the middleware
 will automatically parse responses from the Rails (Or any Rack-compatible
 application, actually), and replace the <img src="file.jpg"> with encoded data.
-Overall, this technique is not perfect - it'sÂ definitelyÂ not something to be
+Overall, this technique is not perfect - it's definitely not something to be
 overused, but with careful consideration and appropriate selection of images
 it's a good stepping stone to improved web performance.
 

@@ -3,6 +3,7 @@ title: I just found this - it's a little promotional thing that the...
 layout: page
 
 type: photo
+comments: true
 ---
 
 [/images/assets/www.tumblr.com/photo/1280/4533787560/1/

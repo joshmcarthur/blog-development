@@ -5,3 +5,6 @@ body > div#container { border-left: solid 10px #DDD; border-right: solid 10px #D
 body > div#container > header:first-child { border-bottom: solid 1px #DDD; }
 body > div#container > footer { background: none; background-color: #FFF; }
 
+aside[role="sidebar"]:hover a { color: #4B4B4B; }
+aside[role="sidebar"] a:hover { color: #1863A1; }
+

@@ -3,6 +3,7 @@ title: "Quick: Get random record efficiently in Rails"
 layout: page
 
 type: regular
+comments: true
 ---
 
 You could use SQL's random function (RAND() or RANDOM() depending on database

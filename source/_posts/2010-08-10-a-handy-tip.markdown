@@ -3,6 +3,7 @@ title: A handy tip
 layout: page
 
 type: regular
+comments: true
 ---
 
 Just FYI...

@@ -3,6 +3,7 @@ title: Creating a Scalable Academic Signup System
 layout: page
 
 type: regular
+comments: true
 ---
 
 While working at 3Months as a developer, I am also completing a Bachelor of

@@ -3,6 +3,7 @@ title: "Quick: Clear Gemset"
 layout: page
 
 type: regular
+comments: true
 ---
 
 If you're finding that you have to change something fairly significant in your

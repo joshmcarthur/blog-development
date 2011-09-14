@@ -3,6 +3,7 @@ title: Time Problems
 layout: page
 
 type: regular
+comments: true
 ---
 
 Fixing time problems is probably one of the most satisfying things to fix

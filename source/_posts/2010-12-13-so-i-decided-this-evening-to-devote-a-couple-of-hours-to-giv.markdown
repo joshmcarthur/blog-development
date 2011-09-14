@@ -7,6 +7,7 @@ tags:
   - rails
 
 type: photo
+comments: true
 ---
 
 [/images/assets/www.tumblr.com/photo/1280/2196843804/1/

@@ -8,6 +8,7 @@ tags:
   - hints
 
 type: regular
+comments: true
 ---
 
 Recently, I've been implementing an admin interface for a system that I want to

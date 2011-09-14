@@ -3,6 +3,7 @@ title: Arbitrary Ordering in PostgreSQL when Rails + ENUM = No.
 layout: page
 
 type: regular
+comments: true
 ---
 
 I've recently had to do a custom sort for a work project that has required a

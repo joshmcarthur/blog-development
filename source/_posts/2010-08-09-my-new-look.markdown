@@ -3,6 +3,7 @@ title: My new look...
 layout: page
 
 type: regular
+comments: true
 ---
 
 Do you like my revamped theme? I think it's totally cool to have this type of

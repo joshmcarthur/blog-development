@@ -5,6 +5,7 @@ tags:
   - work
 
 type: regular
+comments: true
 ---
 
 [The Dictionary of New Zealand Sign Language](http://nzsl.vuw.ac.nz) went live

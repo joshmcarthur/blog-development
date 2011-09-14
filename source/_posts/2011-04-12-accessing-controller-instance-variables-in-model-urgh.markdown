@@ -3,6 +3,7 @@ title: Accessing controller instance variables in model (Urgh?)
 layout: page
 
 type: regular
+comments: true
 ---
 
 I can tell that this title alone will irritate a lot of developers out there.

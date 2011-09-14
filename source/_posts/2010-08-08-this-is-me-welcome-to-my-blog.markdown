@@ -3,6 +3,7 @@ title: This is me. Welcome to my blog :-)
 layout: page
 
 type: photo
+comments: true
 ---
 
 [/images/assets/www.tumblr.com/photo/1280/921866219/1/

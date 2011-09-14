@@ -3,6 +3,7 @@ title: Interesting Ideas
 layout: page
 
 type: regular
+comments: true
 ---
 
 As part of my research for my last-minute essay rewrite, I happened to pick up

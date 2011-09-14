@@ -3,6 +3,7 @@ title: Running Rake tasks with Cron (RVM)
 layout: page
 
 type: regular
+comments: true
 ---
 
 Recently I've had to deal with a strange problem with rake tasks being run

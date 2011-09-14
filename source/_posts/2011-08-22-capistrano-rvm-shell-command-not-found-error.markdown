@@ -3,6 +3,7 @@ title: "Capistrano rvm-shell: command not found error"
 layout: page
 
 type: regular
+comments: true
 ---
 
 I've just come across this problem, and I had to share it here - I can't find

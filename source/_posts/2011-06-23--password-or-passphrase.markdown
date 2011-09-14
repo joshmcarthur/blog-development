@@ -3,6 +3,7 @@ title: "'Password' or 'Passphrase'"
 layout: page
 
 type: regular
+comments: true
 ---
 
 So apparently pass phrases are the new 'secure password' - kinda the step you

@@ -3,6 +3,7 @@ title: Here's how this works...
 layout: page
 
 type: regular
+comments: true
 ---
 
 Right team, listen up.

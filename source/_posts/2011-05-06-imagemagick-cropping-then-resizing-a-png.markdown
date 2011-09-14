@@ -8,6 +8,7 @@ tags:
   - image resizing
 
 type: regular
+comments: true
 ---
 
 I've been working on an image processor class for work, and recently ran into
