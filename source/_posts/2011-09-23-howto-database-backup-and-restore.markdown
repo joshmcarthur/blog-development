@@ -32,7 +32,7 @@ Postgres databases are backed up using the `pg_dump` command - a command-line ut
 
 Let me explain these options and why I use them:
 
-* `--no-owner`: By default, Postgres dumps the database with lots of SET OWNER TO statements. I like to take these out of the dump, as I'm not necessarily restoring the dump to exactly the same server with exactly the same users. Using --no-dump means that ownership statements will be excluded.
+* `--no-owner`: By default, Postgres dumps the database with lots of SET OWNER TO statements. I like to take these out of the dump, as I'm not necessarily restoring the dump to exactly the same server with exactly the same users. Using --no-owner means that ownership statements will be excluded.
 * `-U [username]`: This lets you pass in the database user name your web application usually uses to connect - using this is just good practise, as it ensures that what you're dumping is exactly what the web application has.
 * `-W`: This option, used in conjunction with the `-U` flag, prompts for the password when you run the command
 * `[database_name]`: This is the name of the database that you want to dump
