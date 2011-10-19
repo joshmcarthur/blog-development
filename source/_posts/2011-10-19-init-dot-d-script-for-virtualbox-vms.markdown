@@ -31,7 +31,6 @@ case "$1" in
 		;;
 	stop)
 		echo "Saving state of VirtualBox VM..."
-		# NOTE: this stops ALL virtual machines running
 		cat /etc/virtualbox/machines_enabled | while read VM; do
 		  sudo -H -u $VMUSER /usr/bin/VBoxManage controlvm "$VM" savestate
 		done
