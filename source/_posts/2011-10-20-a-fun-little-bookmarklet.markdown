@@ -7,6 +7,7 @@ categories: fun,nerdy
 tags:
   - fun
   - javascript
+  - experiments
 ---
 
 I'm sure this has been done before, but after noticing [1-day's](http://www.1-day.co.nz)  'Look Busy' feature, I just had to write a bookmarklet to load this up on any site!
