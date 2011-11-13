@@ -16,7 +16,7 @@ To help out with this, I've put together a quick bookmarket, [similar to the mor
 
 Here's the bookmarklet:
 
-<a href="javascript:var s=document.createElement('script);s.type='text/javascript';s.src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js';document.findElementsByTagName('body')[0].appendChild(s);">Add jQuery</a>
+<a href="javascript:var s=document.createElement('script');s.type='text/javascript';s.src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js';document.findElementsByTagName('body')[0].appendChild(s);">Add jQuery</a>
 
 To add this to your browser, you can either: right-click on this link, select 'Bookmark Link', or just drag-and-drop onto your Bookmarks toolbar. Once it's added, you can simply click on the bookmark on any page, and jQuery will be loaded into the page for you to use. 
 
