@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/page/8/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/09/running-rake-tasks-with-cron-rvm/">Running Rake Tasks With Cron (RVM)</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-09T00:00:00+13:00" pubdate  data-updated="true" >Mar 9<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I&#8217;ve had to deal with a strange problem with rake tasks being run
+using Cron, a UNIX tool for running commands on a scheduled basis. The problem
+was basically the server being slowly strangled of resources across a forty to
+fifty minute time period, as each time the rake task was run it would leave an
+entire bash process sitting there consuming resources.
+I had assumed that this problem was relating to the rake task exiting in a non-
+normal fashion - an exception maybe, or just not returning something that bash
+was requiring to say &#8216;OK, I can close now&#8217;. As it turned out, the solution was
+even more basic than that.
+The server is question is a bit of a prototype, as it&#8217;s using a system-wide
+installation of RVM to mange two very different sets of gems. To help
+integration with Passenger, each project directory has an .rvmrc file that
+automatically sets the correct Ruby version and Gemset when that directory is
+entered. RVM has a neat security feature however, that prompts you to view and
+approve the file before it is executed for the first time - and, you guessed
+it, this is what was tripping up Cron.
+What was happening, is that Cron was changing directory to the release path in
+order to execute the rake task - but not getting as far as actually executing
+the Rake task. Instead, Cron was being presented with a security warning from
+RVM, which was very cleverly sitting there waiting for input to approve the
+file - causing Bash to sit there&#8230; for ever.
+Fortunately, I did find a solution - it is possible to turn this security
+mechanism file off, to stop it from prompting for approval of the .rvmrc file,
+by adding a configuration flag to the default rvmrc file in /etc/rvmrc - here&#8217;s
+the configuration flag:
+export rvm_trust_rvmrcs_flag=1
+(It goes inside what should be an if block).
+From now on, when Cron runs the rake tasks, it won&#8217;t be presented with this
+prompt - approval will be assumed. No more server resources limits exceeded
+alerts!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/07/ok-so-i-was-wrong/">OK, So I Was Wrong</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-07T00:00:00+13:00" pubdate  data-updated="true" >Mar 7<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>OK,_So_I_Was_Wrong
+So I was just flipping through my archives of blog posts, when I found this_one
+- my first ever post to Tumblr, where I vowed to stop posting enormously long
+essays on silly ideas I have to change the world.
+Oops.
+Sorry everyone!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/04/dynamically-serving-inline-images-with-rack/">Dynamically Serving Inline Images With Rack</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-04T00:00:00+13:00" pubdate  data-updated="true" >Mar 4<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Following an insanely interesting presentation by Steve Souders at Webstock, I
+began thinking about ways to simplify (i.e. automate) certain processes to
+optimize performance of sites. Something that immediately jumped out at me from
+early on in Steve&#8217;s workshop (So early, I was able to start coding in the
+halfway break), was that inline images were an ideal candidate for something
+that is relatively easy to do, but could have a significant effect on overall
+page load speed.
+The concept of inline images has been around for a while, and basically
+involves embedding Base64-encoded image data within the image tag like so:
+<img src="data:image/jpeg;base64,[data] />
+So, what impact does this have on performance vs. the normal technique?
+Well, the normal technique involves several more requests - one per image, in
+fact. As Steve pointed out in his workshop, server response time is only a
+small part of the problem - the reality is that it doesn&#8217;t make a huge
+difference how fast a piece of content is processed on the server - unless you
+are doing something really wrong, of course. Where you can really hit
+performance bottlenecks is actually in the request-response transaction -
+waiting for data to be transmitted, received, processed, assembled, and
+rendered on screen.
+Using inline images can improve web performance when used appropriately, but as
+with any other performance technique, it has it&#8217;s drawbacks. First of all,
+because the images are actually embedded into the page, caching is affected -
+browsers may cache images longer than static pages, and if your web server is
+not set up correctly, dynamic pages may not be cached at all. Next, the
+relative file size of the page is not equal to the page size without images
+plus the combined images file size. The encoding process tends to result in
+about a 30% increase in size.
+Notice above I have said when used appropriatelyÂ - this means that, despite
+the drawbacks above, it really can help web performance. The key to not
+overusing this technique is to carefully consider the boundaries of what images
+should be embedded - the best candidates are small to medium sized images that
+do not generally change much - especially if there are quite a few of them on
+the page and the server is slow - this means that your page load speed might be
+slower, but there will also be no need to make several requests once the page
+hasÂ loaded to draw in all of these assets. Large images, on the other hand,
+should not generally be encoded. There is a fine balance between embedding
+images into a page to save on requests, and overloading the page with embedded
+images and ending up with a 2 or 3 megabyte page for the client to load. Large
+images will shove up this page size, and in addition to this, they are usually
+particular files that you want to apply a different caching policy to anyway.
+In order to help out and generally feel good about my contributions to web
+performance and open source, I have actually translated what I&#8217;ve written down
+here into a piece of Rack middleware that creates inline images (Since I&#8217;ve
+come across rack-pagespeedÂ since then, this middleware is probably
+superseded), and embeds them into a page. This technique was nice because a) It
+gave me a chance to learn how Rack middleware works with a practical project,
+and b) because when myself or others wish to use it, all that needs to be done
+is to drop the Gem into my Gemfile, run bundle install, and register the
+middleware in my Application&#8217;s configuration - from there on, the middleware
+will automatically parse responses from the Rails (Or any Rack-compatible
+application, actually), and replace the <img src="file.jpg"> with encoded data.
+Overall, this technique is not perfect - it&#8217;s definitely not something to be
+overused, but with careful consideration and appropriate selection of images
+it&#8217;s a good stepping stone to improved web performance.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/04/creating-a-scalable-academic-signup-system/">Creating a Scalable Academic Signup System</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-04T00:00:00+13:00" pubdate  data-updated="true" >Mar 4<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While working at 3Months as a developer, I am also completing a Bachelor of
+Business Information Systems at Victoria University. One of the things that
+rolls around twice a year and always causes students headaches is the signups
+systemÂ - it&#8217;s one of the bragging points of the School of Information
+Management at Victoria, as it was build as a project by a group of students
+there (Hence the name &#8216;S-Cubed = SSS = SIM Signups System). In itself, it&#8217;s a
+good application - it fulfills it&#8217;s brief of managing signups for tutorials and
+workshops, and lecturers and students alike seem to have no huge issues using
+is. The problem is though, is that its performance under load is crap - it
+simply was not build for the load that it receives when tutorial signups for 2
+courses of 700 people each opens at 9am, and each of those 1400 people trying
+to get the exact tutorial they want are continually refereshing the page and so
+exacerbating the server load even more.</p>
+
+<p>This server load doesn&#8217;t just extend to slow page load speed - since the site
+has not been build with scalability in mind, there have been ongoing issues
+with sessions expiring as people try and signup for a tutorial or workshop,
+people stuck halfway through a transaction, and the server even goes down every
+now and then.
+What I am proposing is an open framework that takes the best aspects of this
+type of system, and builds upon it techniques to optimize page load speed, and
+increase scalability. It seems to me that Universities in general are lacking a
+system that allows them to smoothly run signups (usually they are dependent on
+modified forum software, paper signups, emails or proprietary in-house
+systems), and so this isÂ definitelyÂ something that is marketable around the
+world.
+As I see it, here are the base requirements for such a system:</p>
+
+<pre><code>* LDAP and OAuth Authentication so that students do not need to 'register'
+  to sign up for a tutorial
+* Accurate time-based releases of tutorials and workshops that do not
+  require human intervention
+* Automatic server load monitoring with the ability to increase allocated
+  resources if necessary (i.e. this application is an ideal candidate for
+  Rackspace Cloud or Heroku)
+* Per-course and per-University analytics for better scheduling of tutorial
+  and workshop release times and how students are accessing the system.
+* The ability for lecturers and course administrators to export and print
+  class lists, tutorial lists, and workshops list with all student data or
+  just a subset.
+</code></pre>
+
+<p>This project isÂ definitelyÂ going on theÂ work pileÂ for my personal projects
+- it&#8217;s got a couple of interesting aspects to it which I haven&#8217;t approached
+before (Such as LDAP from Rails), and generally seems to follow along with my
+ethos of community-oriented &#8216;responsible web applications&#8217;.</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/9/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/7/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,619 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/page/2/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-20T13:28:00+13:00" pubdate  data-updated="true" >Oct 20<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;m sure this has been done before, but after noticing <a href="http://www.1-day.co.nz">1-day&#8217;s</a>  &#8216;Look Busy&#8217; feature, I just had to write a bookmarklet to load this up on any site!</p>
+
+<p>If you just want to try it out, here&#8217;s the link <a href="javascript:var busy=document.createElement('div');var body=document.getElementsByTagName('body')[0];var max_width_cache=body.getAttribute('max-width');body.style.maxWidth='100%';busy.setAttribute('id','lookbusy');busy.setAttribute('style','position: absolute; z-index: 1000; width: 100%; height: 100%; top: 0px; left: 0px; right: 0px; bottom: 0px; background: #FFF url(http://www.1-day.co.nz/images/2010_mission_critical_development_strategy.png) no-repeat 0 0;');var close=document.createElement('a');close.setAttribute('class','busy close');close.setAttribute('style','position: fixed; z-index: 1001; right: 10px; bottom: 10px; background-color: #FFF; color: #000; font-size:10px');close.setAttribute('href','#');close.innerText='OK, Clear';close.setAttribute('onclick',&quot;javascript:body.removeChild(document.getElementById('lookbusy'));body.style.maxWidth = &quot; + max_width_cache);busy.appendChild(close);body.appendChild(busy)">Look Busy Bookmarklet</a> - either right-click on the link and &#8216;Copy URL&#8217; and paste into a new bookmark, or drag to your bookmarks bar or folder. It should work in Chrome, Safari, Firefox and IE7-9</p>
+
+<p>Here&#8217;s the source code for anyone interested in seeing how this works:</p>
+
+<div><figure role=code><figcaption><span>Look Busy Bookmarklet  </span></figcaption>
+ <div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+<span class='line'>19</span>
+<span class='line'>20</span>
+<span class='line'>21</span>
+<span class='line'>22</span>
+<span class='line'>23</span>
+</pre></td><td class='code' width='100%'><pre><code class='javascript'><div class='line'><span class="c1">// Create a new div tag to contain our image</span>
+</div><div class='line'><span class="kd">var</span> <span class="nx">busy</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+</div><div class='line'><span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+</div><div class='line'><span class="kd">var</span> <span class="nx">max_width_cache</span> <span class="o">=</span> <span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">maxWidth</span><span class="p">;</span>
+</div><div class='line'><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">maxWidth</span> <span class="o">=</span> <span class="s1">&#39;100%&#39;</span><span class="p">;</span>
+</div><div class='line'><span class="nx">busy</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;lookbusy&#39;</span><span class="p">);</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Add a background image, and position the div tag above all other content and make it fill the screen</span>
+</div><div class='line'><span class="nx">busy</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;position: absolute; z-index: 1000; width: 100%; height: 100%; top: 0px; left: 0px; right: 0px; bottom: 0px; background: #FFF url(http://www.1-day.co.nz/images/2010_mission_critical_development_strategy.png) no-repeat 0 0;&#39;</span><span class="p">);</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Add a inconspicuous link to close the image</span>
+</div><div class='line'><span class="kd">var</span> <span class="nx">close</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+</div><div class='line'><span class="nx">close</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;busy close&#39;</span><span class="p">);</span>
+</div><div class='line'><span class="nx">close</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;position: fixed; z-index: 1001; right: 10px; bottom: 10px; background-color: #FFF; color: #000; font-size:10px&#39;</span><span class="p">);</span>
+</div><div class='line'><span class="nx">close</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">);</span>
+</div><div class='line'><span class="nx">close</span><span class="p">.</span><span class="nx">innerText</span> <span class="o">=</span> <span class="s2">&quot;OK, Clear&quot;</span><span class="p">;</span>
+</div><div class='line'><span class="nx">close</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">&#39;onclick&#39;</span><span class="p">,</span> <span class="s2">&quot;javascript:body.removeChild(document.getElementById(&#39;lookbusy&#39;));body.style.maxWidth = &quot;</span> <span class="o">+</span> <span class="nx">max_width_cache</span><span class="p">);</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Add the close image to the look busy div tag</span>
+</div><div class='line'><span class="nx">busy</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">close</span><span class="p">);</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Add the look busy div tag to the body of the document</span>
+</div><div class='line'><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">busy</span><span class="p">);</span>
+</div></code></pre></td></tr></table></div></figure></div>
+
+
+<p>Give it a go! It&#8217;s super handy for when you&#8217;re checking out <a href="http://www.trademe.co.nz">TradeMe</a>, <a href="http://failblog.org">Failblog</a>, or <a href="http://images.google.com?q=wink">anything similar</a>!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/10/19/init-dot-d-script-for-virtualbox-vms/">Safely Start and Stop VirtualBox VMs With init.d</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-19T17:05:00+13:00" pubdate  data-updated="true" >Oct 19<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I&#8217;ve rolled out a virtual machine host box to run headless VMs (headless means that there is no display, keyboard etc plugged into it), as these make great test and experiment machines for trying new things out. As part of this rollout, I mashed a couple of blogs and some documentation together and came up with this script:</p>
+
+<div><figure role=code><figcaption><span>/etc/init.d/virtual_machines  </span></figcaption>
+ <div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+<span class='line'>19</span>
+<span class='line'>20</span>
+<span class='line'>21</span>
+<span class='line'>22</span>
+<span class='line'>23</span>
+<span class='line'>24</span>
+<span class='line'>25</span>
+<span class='line'>26</span>
+<span class='line'>27</span>
+<span class='line'>28</span>
+<span class='line'>29</span>
+</pre></td><td class='code' width='100%'><pre><code class='bash'><div class='line'><span class="c">#!/bin/sh</span>
+</div><div class='line'>
+</div><div class='line'><span class="c"># virtual_machines  Start and stop virtual machines when the host changes state</span>
+</div><div class='line'><span class="c">#</span>
+</div><div class='line'><span class="c">#</span>
+</div><div class='line'><span class="nv">VMUSER</span><span class="o">=</span>administrator
+</div><div class='line'>
+</div><div class='line'><span class="k">case</span> <span class="s2">&quot;$1&quot;</span> in
+</div><div class='line'>    start<span class="o">)</span>
+</div><div class='line'>        <span class="nb">echo</span> <span class="s2">&quot;Starting VirtualBox VMs&quot;</span>
+</div><div class='line'>        <span class="k">if</span> <span class="o">[</span> -f /etc/virtualbox/machines_enabled <span class="o">]</span>; <span class="k">then</span>
+</div><div class='line'><span class="k">            </span>cat /etc/virtualbox/machines_enabled | <span class="k">while </span><span class="nb">read </span>VM; <span class="k">do</span>
+</div><div class='line'><span class="k">              </span>sudo -H -b -u <span class="nv">$VMUSER</span> /usr/bin/VBoxHeadless -startvm <span class="s2">&quot;$VM&quot;</span>
+</div><div class='line'>            <span class="k">done</span>
+</div><div class='line'><span class="k">        fi</span>
+</div><div class='line'>        ;;
+</div><div class='line'>    stop<span class="o">)</span>
+</div><div class='line'>        <span class="nb">echo</span> <span class="s2">&quot;Saving state of VirtualBox VM...&quot;</span>
+</div><div class='line'>        cat /etc/virtualbox/machines_enabled | <span class="k">while </span><span class="nb">read </span>VM; <span class="k">do</span>
+</div><div class='line'><span class="k">          </span>sudo -H -u <span class="nv">$VMUSER</span> /usr/bin/VBoxManage controlvm <span class="s2">&quot;$VM&quot;</span> savestate
+</div><div class='line'>        <span class="k">done</span>
+</div><div class='line'>        ;;
+</div><div class='line'>    *<span class="o">)</span>
+</div><div class='line'>        <span class="nb">echo</span> <span class="s2">&quot;Usage: /etc/init.d/virtual_machines {start|stop}&quot;</span>
+</div><div class='line'>        <span class="nb">exit </span>1
+</div><div class='line'>        ;;
+</div><div class='line'><span class="k">esac</span>
+</div><div class='line'>
+</div><div class='line'><span class="nb">exit </span>0
+</div></code></pre></td></tr></table></div></figure></div>
+
+
+<p>I wrote this because this isn&#8217;t something that is supported directly by VirtualBox, and it&#8217;s essential that on a headless server that these virtual machines be able to go up and down happily without harm and reliably. It supports start and stop explanations and uses savestate, rather than poweroff - essentially, as the host server goes down, it will &#8216;hibernate&#8217; each VM, and then restore when the server starts back up again.</p>
+
+<p>Another feature that I built into this was the use of a file in which a list of VMs can be specified to start and stop - for example, if you only want this script to deal with a subset of the virtual machines you have set up on the host server.</p>
+
+<p>An example of this file might look like this:</p>
+
+<div><figure role=code><figcaption><span>/etc/virtualbox/virtual_machines </span></figcaption>
+<div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+</pre></td><td class='code' width='100%'><pre><code class=''><div class='line'>winxp_development
+</div><div class='line'>win7_development
+</div><div class='line'>ubuntu_11_10_development</div></code></pre></td></tr></table></div></figure></div>
+
+
+<p>It works really well for me, and since it&#8217;s something I had trouble tracking down, hopefully I can make someone&#8217;s life a little easier with this solution.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/10/06/action-mailer-interceptors/">Action Mailer Interceptors</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-06T16:51:00+13:00" pubdate  data-updated="true" >Oct 6<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ActionMailer Interceptors are a great way to test the full stack of your mailing in Rails from the generation from data through to receiving the email in your client. They are similar to ActiveRecord&#8217;s <code>before_x</code>-type callbacks, and let you change something about the message being sent right before it&#8217;s actually dispatched.</p>
+
+<p>The most common purpose I use these for is to redirect mail being sent from the application to either my Inbox, or some shared account (if it&#8217;s on a project where I&#8217;m not the only developer). This lets me make sure that the HTML in the message is displayed properly, and that the data gets injected into the content the way I expect it to be.</p>
+
+<p>Here&#8217;s a quick example of how to use a Mail interceptor for this purpose:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># lib/development_mail_interceptor.rb</span>
+</div><div class='line'><span class="k">class</span> <span class="nc">DevelopmentMailInterceptor</span>
+</div><div class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">delivering_email</span><span class="p">(</span><span class="n">mail</span><span class="p">)</span>
+</div><div class='line'>    <span class="n">mail</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;&lt;</span><span class="si">#{</span><span class="n">mail</span><span class="o">.</span><span class="n">to</span><span class="si">}</span><span class="s2">&gt; </span><span class="si">#{</span><span class="n">mail</span><span class="o">.</span><span class="n">subject</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">mail</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="s2">&quot;me@mywork.co.nz&quot;</span>
+</div><div class='line'>  <span class="k">end</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1"># config/initializers/mail_interceptors.rb</span>
+</div><div class='line'><span class="nb">require</span> <span class="s1">&#39;development_mail_interceptor&#39;</span>
+</div><div class='line'><span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">register_interceptor</span><span class="p">(</span><span class="no">DevelopmentMailInterceptor</span><span class="p">)</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development?</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>&#8230;and give one of your mailers a go.</p>
+
+<p>This is a very simple example, of course, but there are a lot of uses for this type of thing - logging &amp; auditing, checking against quotas, analysis, etc. etc.</p>
+
+<p>What really triggered this post though, was a odd problem I came across when trying to get this interceptor to work. An ActionMailer method can be triggered using one of two methods: either <code>deliver</code> or <code>deliver!</code> - the main difference between the two is that the second will throw exceptions if it cannot be sent, which is why I tend to prefer using it. Something to keep in mind though, is that using <code>deliver!</code> will call any registered Mail Observers, but <strong>not Interceptors</strong> - meaning that your mail will be sent unaltered.</p>
+
+<p>It really was a frustrating process to debug, but after looking at the <a href="https://github.com/mikel/mail">Mail gem</a> source code (ActionMailer back-ends onto this gem for it&#8217;s mail setup and delivery processes), in particular the <a href="https://github.com/mikel/mail/blob/master/lib/mail/message.rb#L227">Message class</a>, I noticed this crucial difference between the two. Resolving the issue is, of course, as simple as using <code>deliver</code> - without the exclamation mark. After that, your Interceptors will be triggered just as they should be.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/30/overriding-action-caches/">Overriding Action Caches</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-09-30T11:48:00+13:00" pubdate  data-updated="true" >Sep 30<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, I have been working on a web application that is quite media rich, and is expected to run into quite a bit of traffic. I&#8217;ve been working on building an API for a front end system, using JSON to handle passing this data back and forth.</p>
+
+<p>Obviously with this amount of traffic, and the size of some of the JSON collections we were having to marshall and store via Rails, we were going to need some pretty intense caching to reduce the load on Rails, and our database server. We had to balance this need, however, with the requirement that data should be live, or close to live (i.e. around 5-10 minutes) - in particular, statistics, which are calculated on-demand for several responses.</p>
+
+<p>The strategy we chose to manage this balance was to use Rails&#8217; provided <code>caches_action</code> method to cache our JSON responses, building up a cache key from certain parameters, as well as some meta-data, for example, the user&#8217;s logged-in status. Because we were using memcached, we could use the <code>:expires_in</code> option to tell the memcached store to expire the cached value after x minutes.</p>
+
+<p>This approach worked for a while, but we found we had a pretty major problem - while the data was cached, it went alright, but as soon as the cache expired we were having loads of users hitting a response that took way to long to build (before we optimized queries, 30+ seconds). So, we needed another fix.</p>
+
+<p>To fix this problem, we tried out adding some cron tasks that used curl to ping the cached URLs, to try and preload the cache so that less users would be hitting the DB. This only partially fixed the problem though, so we identified a solution that would work a little better for us.</p>
+
+<p>What we wanted to do was to leave our existing caching in place - aside from the expiry, it was working fine, and we didn&#8217;t want to rework everything. With this in mind though, we needed a way to force a refresh of the data in the cache external from the controller. What we ended up implementing was a monkeypatch on Rails&#8217; caches_action-related methods, that allows us to pass in an <code>:overwrite</code> option - this can be a Proc, or just a boolean - basically, when the value of <code>:overwrite</code> is true, Rails will bypass the cached value, grab the <em>new value</em>, and load this into the cache - effectively refreshing the value without a user having to trigger the process.</p>
+
+<p>Here&#8217;s the monkeypatch code - have a scan through it, and I&#8217;ll explain it below:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+<span class='line'>19</span>
+<span class='line'>20</span>
+<span class='line'>21</span>
+<span class='line'>22</span>
+<span class='line'>23</span>
+<span class='line'>24</span>
+<span class='line'>25</span>
+<span class='line'>26</span>
+<span class='line'>27</span>
+<span class='line'>28</span>
+<span class='line'>29</span>
+<span class='line'>30</span>
+<span class='line'>31</span>
+<span class='line'>32</span>
+<span class='line'>33</span>
+<span class='line'>34</span>
+<span class='line'>35</span>
+<span class='line'>36</span>
+<span class='line'>37</span>
+<span class='line'>38</span>
+<span class='line'>39</span>
+<span class='line'>40</span>
+<span class='line'>41</span>
+<span class='line'>42</span>
+<span class='line'>43</span>
+<span class='line'>44</span>
+<span class='line'>45</span>
+<span class='line'>46</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="nb">require</span> <span class="s1">&#39;set&#39;</span>
+</div><div class='line'>
+</div><div class='line'><span class="k">module</span> <span class="nn">ActionController</span> <span class="c1">#:nodoc:</span>
+</div><div class='line'>  <span class="k">module</span> <span class="nn">Caching</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="k">module</span> <span class="nn">Actions</span>
+</div><div class='line'>    <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+</div><div class='line'>
+</div><div class='line'>      <span class="kp">protected</span>
+</div><div class='line'>      <span class="k">class</span> <span class="nc">ActionCacheFilter</span> <span class="c1">#:nodoc:</span>
+</div><div class='line'>        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+</div><div class='line'>          <span class="vi">@cache_path</span><span class="p">,</span> <span class="vi">@store_options</span><span class="p">,</span> <span class="vi">@cache_layout</span> <span class="o">=</span>
+</div><div class='line'>            <span class="n">options</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="ss">:cache_path</span><span class="p">,</span> <span class="ss">:store_options</span><span class="p">,</span> <span class="ss">:layout</span><span class="p">)</span>
+</div><div class='line'>        <span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'>        <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+</div><div class='line'>          <span class="n">path_options</span> <span class="o">=</span> <span class="k">if</span> <span class="vi">@cache_path</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:call</span><span class="p">)</span>
+</div><div class='line'>            <span class="n">controller</span><span class="o">.</span><span class="n">instance_exec</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="o">&amp;</span><span class="vi">@cache_path</span><span class="p">)</span>
+</div><div class='line'>          <span class="k">else</span>
+</div><div class='line'>            <span class="vi">@cache_path</span>
+</div><div class='line'>          <span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'>          <span class="n">cache_path</span> <span class="o">=</span> <span class="no">ActionCachePath</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">path_options</span> <span class="o">||</span> <span class="p">{})</span>
+</div><div class='line'>          <span class="n">overwrite</span> <span class="o">=</span> <span class="k">if</span> <span class="vi">@overwrite</span> <span class="o">=</span> <span class="vi">@store_options</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="ss">:overwrite</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</div><div class='line'>            <span class="vi">@overwrite</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:call</span><span class="p">)</span> <span class="p">?</span> <span class="n">controller</span><span class="o">.</span><span class="n">instance_exec</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="o">&amp;</span><span class="vi">@overwrite</span><span class="p">)</span> <span class="p">:</span> <span class="vi">@overwrite</span>
+</div><div class='line'>          <span class="k">else</span>
+</div><div class='line'>            <span class="kp">false</span>
+</div><div class='line'>          <span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'>          <span class="n">body</span> <span class="o">=</span> <span class="n">overwrite</span> <span class="p">?</span> <span class="kp">nil</span> <span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">read_fragment</span><span class="p">(</span><span class="n">cache_path</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="vi">@store_options</span><span class="p">)</span>
+</div><div class='line'>
+</div><div class='line'>          <span class="k">unless</span> <span class="n">body</span>
+</div><div class='line'>            <span class="n">controller</span><span class="o">.</span><span class="n">action_has_layout</span> <span class="o">=</span> <span class="kp">false</span> <span class="k">unless</span> <span class="vi">@cache_layout</span>
+</div><div class='line'>            <span class="k">yield</span>
+</div><div class='line'>            <span class="n">controller</span><span class="o">.</span><span class="n">action_has_layout</span> <span class="o">=</span> <span class="kp">true</span>
+</div><div class='line'>            <span class="n">body</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">_save_fragment</span><span class="p">(</span><span class="n">cache_path</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="vi">@store_options</span><span class="p">)</span>
+</div><div class='line'>          <span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'>          <span class="n">body</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="ss">:text</span> <span class="o">=&gt;</span> <span class="n">body</span><span class="p">,</span> <span class="ss">:layout</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span> <span class="k">unless</span> <span class="vi">@cache_layout</span>
+</div><div class='line'>          <span class="n">controller</span><span class="o">.</span><span class="n">response_body</span> <span class="o">=</span> <span class="n">body</span>
+</div><div class='line'>          <span class="n">controller</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="no">Mime</span><span class="o">[</span><span class="n">cache_path</span><span class="o">.</span><span class="n">extension</span> <span class="o">||</span> <span class="ss">:html</span><span class="o">]</span>
+</div><div class='line'>        <span class="k">end</span>
+</div><div class='line'>      <span class="k">end</span>
+</div><div class='line'>    <span class="k">end</span>
+</div><div class='line'>  <span class="k">end</span>
+</div><div class='line'><span class="k">end</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>By dropping this code into <code>config/initializers</code>, this code gets patched into the ActionController::Caching::Actions::ActionCacheFilter class, and overrides the <code>initalize</code> and <code>filter</code> methods to let us a) pass in an override option, and b) choose to refresh the cache if the override option is set.</p>
+
+<p>The filter method performs as normal until it has finished generating the cache path - at this point, it would normally return the cached response if it was there, and if it had not expired. Instead, my colleague <a href="http://telos.co.nz">James Moriaty</a> replaced some code here:</p>
+
+<ul>
+<li>First, it retrieves the value of the <code>:overwrite</code> option passed in to the <code>caches_action</code> method from the <code>@store_options</code> hash - if it&#8217;s a Proc, it executes it here to get the value, otherwise assumes it&#8217;s a boolean variable.</li>
+<li>If the <code>:overwrite</code> option has not been passed in, it returns false - i.e. don&#8217;t overwrite the cache.</li>
+<li>If the overwrite value is true, it sets the body to nil, so that it will be re-built. Otherwise, it does the usual and returns the cached response from Memcache.</li>
+<li>From here, it more or less goes back to the default class, rebuilding the response from the database.</li>
+</ul>
+
+
+<p>In our application&#8217;s case, we use this functionality by tweaking our cron jobs a little to pass in a particular parameter - we then added the <code>:overwrite</code> option to our <code>caches_action</code> methods, with a Proc that returns true if this parameter equals the correct value.</p>
+
+<p>So far, this solution has worked fantastically - now, hardly any of our users hit the database - instead, they are heading to memcache to grab that response, while our background cron jobs rebuild the data that will get returned to them. Using a parameter for refreshing the cache also lets us easily refresh manually for testing or to check for a value.</p>
+
+<p>This solution is clean, simple and easy to implement. I suggest that if you are facing similar problems, that you give it a go - it&#8217;s really adaptable, and requires few changes if you are already using action caching. Full credit to James for thinking up and implementing this solution - I&#8217;m just documenting it.</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

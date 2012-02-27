@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-02-28T08:50:00+13:00" pubdate  data-updated="true" >Feb 28<span>th</span>, 2012</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last night I quickly patched together a command called <code>git-browse</code> - it&#8217;s a small but handy extension to <a href="http://git-scm.com/">git</a> that looks at the remotes you have set up inside a repository, and opens up the first Github repository it finds - to give an example:</p>
+
+<pre>
+-> git remote -v
+origin git@github.com:joshmcarthur/WriteIdeally.git (fetch)
+origin git@github.com:joshmcarthur/WriteIdeally.git (push)
+heroku git@heroku.com:writeideally.git (fetch)
+heroku git@heroku.com:writeideally.git (push)
+-> git browse
+(Opens https://github.com/joshmcarthur/WriteIdeally in default browser)
+</pre>
+
+
+<p>The source is just below - at the moment, though it&#8217;s only compatible with OS X and Linux - Ubuntu that I know of, but I believe that RedHat won&#8217;t work without installing packages - see <a href="http://stackoverflow.com/questions/5116473/linux-command-to-open-url-in-default-browser">this StackOverflow thread</a></p>
+
+<div><script src='https://gist.github.com/1926673.js?file=git-browse'></script>
+<noscript><pre><code>#!/usr/bin/env ruby
+
+#### git-browse
+### Open a github repository in the default browser
+### Author: @sudojosh
+### Usage: Run `git browse` inside a repo with at least one github remote
+### Installation: Download, run `chmod +x git-browse`, and then copy somewhere on your path
+###   for example, /usr/local/bin/
+
+remotes = `git remote -v`
+remotes = remotes.split(&quot;\n&quot;).map { |remote|
+  remote = remote.split(/\s+/)[1]
+  remote =~ /github.com/ ? remote : nil
+}.compact
+
+if remotes.empty?
+  puts &quot;No Github remotes&quot;
+  exit
+else
+  command = RUBY_PLATFORM.downcase.include?(&quot;darwin&quot;) ? &quot;open&quot; : &quot;xdg-open&quot;
+  remote_url = remotes.first.gsub(&quot;git@github.com:&quot;, &quot;https://github.com/&quot;).gsub(&quot;git://github.com:&quot;, &quot;https://github.com/&quot;).gsub(&quot;.git&quot;, &quot;&quot;)
+  system(&quot;#{command} #{remote_url}&quot;)
+end</code></pre></noscript></div>
+
+
+<p>Installation is pretty basic - just download, make it executable by running <code>chmod +x git-browse</code>, and then copy it somewhere that is referenced by your <code>$PATH</code> variable (you can see what&#8217;s in this variable by running <code>echo $PATH</code> in a Terminal). Once you&#8217;ve done this, you should be able to enter any repository with Github remotes, and run <code>git browse</code> to have the repository open in your default browser.</p>
+
+<p>Extensions to this idea should be pretty easy - something I would be keen to see in a pull request, for example, would be to support opening arbitrary files - i.e. <code>git browse lib/writeideally/api.rb</code> would open <a href="https://github.com/joshmcarthur/WriteIdeally/blob/master/lib/writeideally/api.rb">https://github.com/joshmcarthur/WriteIdeally/blob/master/lib/writeideally/api.rb</a>. Having said that, my gsubbing is pretty gross, so that needs refactoring as well.</p>
+
+<p>In any case, enjoy!</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-14T20:16:00+13:00" pubdate  data-updated="true" >Nov 14<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Tonight I&#8217;d like to talk about a project I&#8217;ve been working on in my spare time for the
+last few months. I&#8217;m super excited to see it coming together, and it&#8217;s <em>nearly</em> ready to
+go live.</p>
+
+<p>The application is called <strong>RateMyCourses</strong> - put simply, it&#8217;s a way for University students
+to explore, rate, and comment on courses they&#8217;ve done to help out others. Inspired by
+such projects as <a href="http://www.fixmystreet.com">Fix my Street</a> and <a href="http://www.fixmytransport.com">Fix my Transport</a>, <strong>RateMyCourses</strong> aims to increase the transparency of quality courses, lecturers, and tertiary education institutes within New Zealand. Over the last few months I&#8217;ve been not only building up this application, but also generating the dataset of courses thats at the heart of the application from scratch, pulling course details from all major Universities within New Zealand, including:</p>
+
+<ul>
+<li>Auckland University</li>
+<li>Massey University</li>
+<li>Waikato University</li>
+<li>Victoria University of Wellington</li>
+<li>University of Canterbury</li>
+<li>Lincoln University</li>
+<li>Otago University</li>
+</ul>
+
+
+<p>All up, I&#8217;ve got nearly 20,000 courses indexed, from these seven institutions. This is a huge opportunity for students to really engage with each other, with their Universities, and with new entrants. Over time, I&#8217;m hoping <strong>RateMyCourses</strong> will become a valuable tool for course planning, as it uncovers the best courses, institutions, and educators in New Zealand (and, eventually, other countries).</p>
+
+<p>This is just a preliminary post while I polish up some areas, and make sure I&#8217;m really happy with things, but I welcome feedback and comments as I move into the launch and adoption phases. I&#8217;m planning to launch in the upcoming weeks, and spend the summer with a core group of users ironing out the major issues, before really pushing it at Victoria next year.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-12T21:27:00+13:00" pubdate  data-updated="true" >Nov 12<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When I&#8217;m working on a site, or analysing somebody else&#8217;s, I often wish that jQuery was loaded into that page - it&#8217;s an unbeatable tool for really digging into the site&#8217;s source to debug something or work out how something has been done.</p>
+
+<p>To help out with this, I&#8217;ve put together a quick bookmarket, <a href="http://blog.joshmcarthur.com/2011/10/20/a-fun-little-bookmarklet/">similar to the more fun one I&#8217;ve done a while ago</a>. It works extremely simply - it just creates a script element, adds jQuery 1.7.0 (served from Google), and appends it to the page body. As soon as the script has loaded, jQuery can be used from within Web Inspector, Firebug, or whatever other Javascript console you use.</p>
+
+<p>Here&#8217;s the bookmarklet:</p>
+
+<p><a href="javascript:var s=document.createElement('script');s.type='text/javascript';s.src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js';document.getElementsByTagName('body')[0].appendChild(s);">Add jQuery</a></p>
+
+<p>To add this to your browser, you can either: right-click on this link, select &#8216;Bookmark Link&#8217;, or just drag-and-drop onto your Bookmarks toolbar. Once it&#8217;s added, you can simply click on the bookmark on any page, and jQuery will be loaded into the page for you to use.</p>
+
+<p>Here&#8217;s the source:</p>
+
+<div><figure role=code><figcaption><span>Add jQuery Bookmarklet  </span></figcaption>
+ <div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+</pre></td><td class='code' width='100%'><pre><code class='javascript'><div class='line'><span class="c1">// Create the script tag</span>
+</div><div class='line'><span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">);</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Set the necessary attributes on the tag</span>
+</div><div class='line'><span class="nx">s</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">;</span>
+</div><div class='line'><span class="nx">s</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s2">&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js&quot;</span><span class="p">;</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1">// Add to the body tag (assume here we&#39;re dealing with HTML, and there IS a body tag)</span>
+</div><div class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span>
+</div></code></pre></td></tr></table></div></figure></div>
+
+
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-03T16:34:00+13:00" pubdate  data-updated="true" >Nov 3<span>rd</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here at <a href="http://3months.com">3Months</a>, we have a couple of monolithic projects that have been around for yonks - because of this, they don&#8217;t have bundler set up, and many of them have incomplete or out-of-date gem requirements. Yesterday I needed to get one of these projects set up locally for the first time, so I was kindly lent the output of <code>gem list</code> with which to install the gems at the correct versions required.</p>
+
+<p>To make this problem a little easier in the future, I wrote a quick script to generate a massive shell command to install all the gems recorded in <code>gem list</code>. Next time I, or someone else, needs to set up one of these types of project, I can run this script, and hand them the generated shell script. They can run this in their gemset of choice, and install all gems required - much easier!</p>
+
+<p>Here&#8217;s the script - alternatively, you can check it out the <a href="https://gist.github.com/1335721">Gist</a>:</p>
+
+<div><figure role=code> <div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+<span class='line'>19</span>
+<span class='line'>20</span>
+<span class='line'>21</span>
+<span class='line'>22</span>
+<span class='line'>23</span>
+<span class='line'>24</span>
+<span class='line'>25</span>
+<span class='line'>26</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1">#!/usr/bin/env ruby</span>
+</div><div class='line'>
+</div><div class='line'>
+</div><div class='line'><span class="c1">### gem_to_command.rb ###############################################################</span>
+</div><div class='line'><span class="c1"># Produce a command to install the gems you currently have installed (using gem list)</span>
+</div><div class='line'><span class="c1"># Makes a simple Shell script that can be run on Linux or Mac OS X</span>
+</div><div class='line'><span class="c1"># </span>
+</div><div class='line'><span class="c1"># Author: @sudojosh</span>
+</div><div class='line'><span class="c1">######################################################################################</span>
+</div><div class='line'>
+</div><div class='line'><span class="n">gems</span> <span class="o">=</span> <span class="sb">`gem list`</span>
+</div><div class='line'><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;install_gems.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">script</span><span class="o">|</span>
+</div><div class='line'>  <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;#!/usr/bin/env ruby</span><span class="se">\n</span><span class="s2">&quot;</span>
+</div><div class='line'>  <span class="n">gems</span> <span class="o">=</span> <span class="n">gems</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">gem</span><span class="o">|</span>
+</div><div class='line'>    <span class="n">gem</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">part</span><span class="o">|</span>
+</div><div class='line'>      <span class="n">part</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[^\w\.\-]/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</div><div class='line'>    <span class="p">};</span>
+</div><div class='line'>    <span class="o">[</span><span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="n">gem</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="o">].</span><span class="n">min</span><span class="o">]</span>
+</div><div class='line'>
+</div><div class='line'>  <span class="p">}</span>
+</div><div class='line'>  <span class="n">gems</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">gem</span><span class="o">|</span>
+</div><div class='line'>    <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;gem install </span><span class="si">#{</span><span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="si">}</span><span class="s2"> -v=</span><span class="si">#{</span><span class="n">gem</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot; &amp;&amp; &quot;</span> <span class="k">unless</span> <span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">gems</span><span class="o">.</span><span class="n">last</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</div><div class='line'>  <span class="p">}</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'><span class="nb">puts</span> <span class="s2">&quot;Wrote install_gems.sh&quot;</span>
+</div></code></pre></td></tr></table></div></figure></div>
+
+
+<p>Here&#8217;s what it does:</p>
+
+<ul>
+<li>Get the output of <code>gem list</code></li>
+<li>Open a .sh file for writing</li>
+<li>Iterate through the <code>gem list</code> output, and parse from the file the name of the gem and the lowest version number (lowest is safer than highest, even though there <em>should</em> only ever be one)</li>
+<li>Assemble a <code>gem install</code> command with the <code>--no-rdoc --no-ri</code> arguments, and write this to the file.</li>
+</ul>
+
+
+<p>Enjoy!</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

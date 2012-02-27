@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Action Mailer Interceptors - blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">Action Mailer Interceptors</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-06T16:51:00+13:00" pubdate  data-updated="true" >Oct 6<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+<div class="entry-content"><p>ActionMailer Interceptors are a great way to test the full stack of your mailing in Rails from the generation from data through to receiving the email in your client. They are similar to ActiveRecord&#8217;s <code>before_x</code>-type callbacks, and let you change something about the message being sent right before it&#8217;s actually dispatched.</p>
+
+<p>The most common purpose I use these for is to redirect mail being sent from the application to either my Inbox, or some shared account (if it&#8217;s on a project where I&#8217;m not the only developer). This lets me make sure that the HTML in the message is displayed properly, and that the data gets injected into the content the way I expect it to be.</p>
+
+<p>Here&#8217;s a quick example of how to use a Mail interceptor for this purpose:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># lib/development_mail_interceptor.rb</span>
+</div><div class='line'><span class="k">class</span> <span class="nc">DevelopmentMailInterceptor</span>
+</div><div class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">delivering_email</span><span class="p">(</span><span class="n">mail</span><span class="p">)</span>
+</div><div class='line'>    <span class="n">mail</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;&lt;</span><span class="si">#{</span><span class="n">mail</span><span class="o">.</span><span class="n">to</span><span class="si">}</span><span class="s2">&gt; </span><span class="si">#{</span><span class="n">mail</span><span class="o">.</span><span class="n">subject</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">mail</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="s2">&quot;me@mywork.co.nz&quot;</span>
+</div><div class='line'>  <span class="k">end</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1"># config/initializers/mail_interceptors.rb</span>
+</div><div class='line'><span class="nb">require</span> <span class="s1">&#39;development_mail_interceptor&#39;</span>
+</div><div class='line'><span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">register_interceptor</span><span class="p">(</span><span class="no">DevelopmentMailInterceptor</span><span class="p">)</span> <span class="k">if</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development?</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>&#8230;and give one of your mailers a go.</p>
+
+<p>This is a very simple example, of course, but there are a lot of uses for this type of thing - logging &amp; auditing, checking against quotas, analysis, etc. etc.</p>
+
+<p>What really triggered this post though, was a odd problem I came across when trying to get this interceptor to work. An ActionMailer method can be triggered using one of two methods: either <code>deliver</code> or <code>deliver!</code> - the main difference between the two is that the second will throw exceptions if it cannot be sent, which is why I tend to prefer using it. Something to keep in mind though, is that using <code>deliver!</code> will call any registered Mail Observers, but <strong>not Interceptors</strong> - meaning that your mail will be sent unaltered.</p>
+
+<p>It really was a frustrating process to debug, but after looking at the <a href="https://github.com/mikel/mail">Mail gem</a> source code (ActionMailer back-ends onto this gem for it&#8217;s mail setup and delivery processes), in particular the <a href="https://github.com/mikel/mail/blob/master/lib/mail/message.rb#L227">Message class</a>, I noticed this crucial difference between the two. Resolving the issue is, of course, as simple as using <code>deliver</code> - without the exclamation mark. After that, your Interceptors will be triggered just as they should be.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">@sudojosh</span></span>
+
+      
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-06T16:51:00+13:00" pubdate  data-updated="true" >Oct 6<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/howto/'>howto</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/" data-via="sudojosh" data-counturl="http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'blog-joshmcarthur';
+  var disqus_identifier = 'http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/';
+  var disqus_url = 'http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

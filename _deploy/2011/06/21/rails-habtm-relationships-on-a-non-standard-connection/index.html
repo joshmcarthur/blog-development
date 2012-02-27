@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails HABTM relationships on a non-standard connection - blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div>
+<article>
+  
+  <header>
+    <h1 class="entry-title">Rails HABTM Relationships on a Non-standard Connection</h1>
+    <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-21T00:00:00+12:00" pubdate  data-updated="true" >Jun 21<span>st</span>, 2011</time></p>
+  </header>
+  
+  <p>Recently, I&#8217;ve been implementing an admin interface for a system that I want to
+make more secure than the main application. The way I&#8217;ve chosen to do this is
+to run some models that relate solely to the admin application (Authentication
+and Authorization in particular), on a different database - let&#8217;s call it
+&#8216;login&#8217;. This seems to be a reasonably common thing to do for security
+purposes, and also for things like moving data from one database to another.
+Once again though, I&#8217;ve been tempted into the potential nest of bugs that is
+has_and_belongs_to_many - let me explain the schema first though: *
+Administrators table - holds email, encrypted passwords and other data about
+administrators * Roles table - holds the name of the role - used to authorizing
+an administrator when performing an action. Each of these tables uses the line
+<code>establish_connection 'login'</code> to connect to a different database than the
+other models - this is the secure database that I want to leave purely for the
+administrative application. So, given that I had an administrator that should
+be given multiple roles, and obviously each role could have many
+administrators, has_and_belongs_to_many seemed the obvious candidate - I didn&#8217;t
+really want a model just for the association, and I would just need to write a
+migration to create the join table. So, off, I went, and here&#8217;s what happened:
+<code>ERROR: relation "administrators_roles" does not exist</code> i.e. - the
+Administrator table exists, and the Role table exists, but the join table just
+isn&#8217;t there. The first call for me was to take a look in the database, and make
+sure that the table was there - which it was - and that migrations had
+definitely run correctly and the schema was correct - which they were. After
+much frustration, I found <a href="http://groups.google.com/group/%0Arubyonrails-talk/browse_thread/thread/7644d9e5f5c6e44a/%0A69c8cce4c39eb571?show_docid=69c8cce4c39eb571">this thread</a> which described the problems I
+had been having - and I was vaguely satisfied to see that the problem wasn&#8217;t
+really my fault. It seems that in some versions of Rails, ActiveRecord&#8217;s
+has_and_belongs_to_many_association class doesn&#8217;t respect the database
+connections that the models are trying to use - instead, it uses the universal
+database connection to try and look up the join table - so, what was going
+wrong was that ActiveRecord was looking in the development environment&#8217;s
+database, when it should have been looking in the login database.
+Unfortunately, short of updating your version of ActiveRecord/Rails or patching
+this class, it seems that there isn&#8217;t really any way of avoiding this problem -
+you have to drop back to using has_many :through with a Model representing your
+join table. I can, though, at least vouch that once you have done this, it does
+work as expected, which, in the end, is what we want. It still feels a bit
+hacky though&#8230;.</p>
+
+  
+    <footer>
+      <p class="meta">
+        
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-21T00:00:00+12:00" pubdate  data-updated="true" >Jun 21<span>st</span>, 2011</time>
+        
+
+
+      </p>
+      
+        <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/" data-via="sudojosh" data-counturl="http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+</div>
+
+      
+    </footer>
+  
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'blog-joshmcarthur';
+  var disqus_identifier = 'http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/';
+  var disqus_url = 'http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

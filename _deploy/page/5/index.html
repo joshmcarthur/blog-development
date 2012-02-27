@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/page/5/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/23/-password-or-passphrase/">&#8216;Password&#8217; or &#8216;Passphrase&#8217;</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-23T00:00:00+12:00" pubdate  data-updated="true" >Jun 23<span>rd</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So apparently pass phrases are the new &#8216;secure password&#8217; - kinda the step you
+get to when you finally accept that your users are going to use something like
+&#8216;password&#8217; for their account password. The natural step here is to reinforce a
+secure password strategy by requiring x numbers, x special characters and a
+certain length - but I find this really annoying when I just want to get signed
+up, and that means that other users do as well. Something I&#8217;ve just been
+thinking about is the naming semantics of password field - labeling it
+&#8216;password&#8217; immediately prompts users to think of an actual word - if they are
+computer-savvy, then they might throw a symbol or number in, but most likely it
+will still be based on an actual word. I wonder what would happen if you
+labelled this field &#8216;Passphrase&#8217; though? I think it is inevitable that many
+users will recognize the pattern of the form rather than the labelling of the
+fields and still enter their &#8216;password&#8217;, but just maybe there will be some
+users who get the semantics of the label, and enter a sentence, instead of a
+word. Even though there may not be special characters in that sentence, it&#8217;s
+still just as, if not more secure from dictionary attacks - guessing one word
+is pretty easy, but it&#8217;s much, much harder to guess a string of words, in the
+correct order - especially if one or two of those words are obfuscated with
+some special characters or numbers. Just a thought&#8230;. but interesting
+nonetheless.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/">Rails HABTM Relationships on a Non-standard Connection</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-21T00:00:00+12:00" pubdate  data-updated="true" >Jun 21<span>st</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, I&#8217;ve been implementing an admin interface for a system that I want to
+make more secure than the main application. The way I&#8217;ve chosen to do this is
+to run some models that relate solely to the admin application (Authentication
+and Authorization in particular), on a different database - let&#8217;s call it
+&#8216;login&#8217;. This seems to be a reasonably common thing to do for security
+purposes, and also for things like moving data from one database to another.
+Once again though, I&#8217;ve been tempted into the potential nest of bugs that is
+has_and_belongs_to_many - let me explain the schema first though: *
+Administrators table - holds email, encrypted passwords and other data about
+administrators * Roles table - holds the name of the role - used to authorizing
+an administrator when performing an action. Each of these tables uses the line
+<code>establish_connection 'login'</code> to connect to a different database than the
+other models - this is the secure database that I want to leave purely for the
+administrative application. So, given that I had an administrator that should
+be given multiple roles, and obviously each role could have many
+administrators, has_and_belongs_to_many seemed the obvious candidate - I didn&#8217;t
+really want a model just for the association, and I would just need to write a
+migration to create the join table. So, off, I went, and here&#8217;s what happened:
+<code>ERROR: relation "administrators_roles" does not exist</code> i.e. - the
+Administrator table exists, and the Role table exists, but the join table just
+isn&#8217;t there. The first call for me was to take a look in the database, and make
+sure that the table was there - which it was - and that migrations had
+definitely run correctly and the schema was correct - which they were. After
+much frustration, I found <a href="http://groups.google.com/group/%0Arubyonrails-talk/browse_thread/thread/7644d9e5f5c6e44a/%0A69c8cce4c39eb571?show_docid=69c8cce4c39eb571">this thread</a> which described the problems I
+had been having - and I was vaguely satisfied to see that the problem wasn&#8217;t
+really my fault. It seems that in some versions of Rails, ActiveRecord&#8217;s
+has_and_belongs_to_many_association class doesn&#8217;t respect the database
+connections that the models are trying to use - instead, it uses the universal
+database connection to try and look up the join table - so, what was going
+wrong was that ActiveRecord was looking in the development environment&#8217;s
+database, when it should have been looking in the login database.
+Unfortunately, short of updating your version of ActiveRecord/Rails or patching
+this class, it seems that there isn&#8217;t really any way of avoiding this problem -
+you have to drop back to using has_many :through with a Model representing your
+join table. I can, though, at least vouch that once you have done this, it does
+work as expected, which, in the end, is what we want. It still feels a bit
+hacky though&#8230;.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/21/quick-rvmrc/">Quick: .rvmrc</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-21T00:00:00+12:00" pubdate  data-updated="true" >Jun 21<span>st</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This post is probably something more experienced RVM users will already know,
+but I wanted to post this as it&#8217;s definitely my discovery of the week. When
+throwing an .rvmrc file into a project, it&#8217;s a nice thing to do to write the
+script correctly so that it will just work for other developers (As well as
+telling you what gemset you&#8217;re using when you jump into the directory). In your
+.rvmrc file, put something like this: <code>rvm use 1.9.2@gemset --create</code> &#8230;this
+will attempt to use that gemset (Printing out a nice message telling you it&#8217;s
+using that one as it does so), and will create it if it doesn&#8217;t exist.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/06/16/ubuntu-quick-imagemagick-install/">Ubuntu: Quick ImageMagick Install</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-16T00:00:00+12:00" pubdate  data-updated="true" >Jun 16<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[This is cross-posted from a tweet I posted a while back - I think it&#8217;s a nice
+bit of advice, and I wanted to store it in a more persistent form]
+Installing ImageMagick is one of the things that Rails developers need to do
+reasonably often when provisioning new servers - basically, if you&#8217;re doing any
+sort of image processing in your application (including the popularPaperclip
+gem), ImageMagick is what you&#8217;ll be using.
+The problem is that there is a bit of a magical formula I have needed to use in
+the past - if you just install ImageMagick, it will most likely not work, as it
+needs to have support for different image formats you want to use compiled it
+in right from the get go. Previously, I have just looked up the various
+libraries I have needed (For PNG, JPEG, etc.), and then either found the
+libraries in the Ubuntu package repositories or built them from source.Â 
+A nice quick way of doing it though, is to use an ImageMagick meta-package in
+the Ubuntu repositories named libmagick-9-dev - it is just a collection of
+popular image format libraries, as well as a couple of additional utilities for
+ImageMagick. You can install it on any Ubuntu system by running this command:
+sudo apt-get install libmagick-9-dev
+ImageMagick itself still needs to be installed, of course. The best option here
+is just to build from source - packages in the repositories are horribly out of
+date, and I have found Paperclip, RMagick and Minimagick all require a fairly
+recent version of ImageMagick.
+Building from source sounds really intimidating, but it really isn&#8217;t - just
+follow these steps:
+First of all, download a tarball of the ImageMagick source onto your computer:
+wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz
+Next, extract the tarball:
+tar -xvzf ImageMagick.tar.gz
+Now configure the package - note especially the end of the output (There is a
+lot of output) - it tells you which Image libraries you have installed - any
+with &#8216;yes&#8217; next to them it will happily format and convert - because you&#8217;ve
+installed the package above, all the common formats should have a &#8216;yes&#8217; next to
+them, but it&#8217;s worth checking.
+cd ImageMagick-[VERSION] (VERSION will be a series of numbers like &#8216;6.7.0-8&#8217;)
+./configure
+Now all the hard work (By you) is done - you just need to compile the packages:
+make &amp;&amp; sudo make install
+All done! - ImageMagick should be all installed. To check, run the command
+which identify, and check it returns a path to the &#8216;identify&#8217; command.
+Note: If you have trouble compiling, make sure Ubunutu&#8217;s build tools are
+installed: sudo apt-get install build-essential</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/4/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

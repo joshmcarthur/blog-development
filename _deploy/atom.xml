@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>blog.joshmcarthur.com</title>
+  <link href="http://blog.joshmcarthur.com/atom.xml" rel="self"/>
+  <link href="http://blog.joshmcarthur.com/"/>
+  <updated>2012-02-28T09:26:21+13:00</updated>
+  <id>http://blog.joshmcarthur.com/</id>
+  <author>
+    <name>@sudojosh</name>
+    
+  </author>
+
+  
+  <entry>
+    <title>Git-browse for Quick Repo Viewing</title>
+    <link href="http://blog.joshmcarthur.com/2012/02/28/git-browse-for-quick-repo-viewing/"/>
+    <updated>2012-02-28T08:50:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2012/02/28/git-browse-for-quick-repo-viewing</id>
+    <content type="html">&lt;p&gt;Last night I quickly patched together a command called &lt;code&gt;git-browse&lt;/code&gt; - it's a small but handy extension to &lt;a href=&quot;http://git-scm.com/&quot;&gt;git&lt;/a&gt; that looks at the remotes you have set up inside a repository, and opens up the first Github repository it finds - to give an example:&lt;/p&gt;
+
+&lt;pre&gt;
+-&gt; git remote -v
+origin git@github.com:joshmcarthur/WriteIdeally.git (fetch)
+origin git@github.com:joshmcarthur/WriteIdeally.git (push)
+heroku git@heroku.com:writeideally.git (fetch)
+heroku git@heroku.com:writeideally.git (push)
+-&gt; git browse
+(Opens https://github.com/joshmcarthur/WriteIdeally in default browser)
+&lt;/pre&gt;
+
+
+&lt;p&gt;The source is just below - at the moment, though it's only compatible with OS X and Linux - Ubuntu that I know of, but I believe that RedHat won't work without installing packages - see &lt;a href=&quot;http://stackoverflow.com/questions/5116473/linux-command-to-open-url-in-default-browser&quot;&gt;this StackOverflow thread&lt;/a&gt;&lt;/p&gt;
+
+&lt;div&gt;&lt;script src='https://gist.github.com/1926673.js?file=git-browse'&gt;&lt;/script&gt;
+&lt;noscript&gt;&lt;pre&gt;&lt;code&gt;#!/usr/bin/env ruby
+
+#### git-browse
+### Open a github repository in the default browser
+### Author: @sudojosh
+### Usage: Run `git browse` inside a repo with at least one github remote
+### Installation: Download, run `chmod +x git-browse`, and then copy somewhere on your path
+###   for example, /usr/local/bin/
+
+remotes = `git remote -v`
+remotes = remotes.split(&amp;quot;\n&amp;quot;).map { |remote|
+  remote = remote.split(/\s+/)[1]
+  remote =~ /github.com/ ? remote : nil
+}.compact
+
+if remotes.empty?
+  puts &amp;quot;No Github remotes&amp;quot;
+  exit
+else
+  command = RUBY_PLATFORM.downcase.include?(&amp;quot;darwin&amp;quot;) ? &amp;quot;open&amp;quot; : &amp;quot;xdg-open&amp;quot;
+  remote_url = remotes.first.gsub(&amp;quot;git@github.com:&amp;quot;, &amp;quot;https://github.com/&amp;quot;).gsub(&amp;quot;git://github.com:&amp;quot;, &amp;quot;https://github.com/&amp;quot;).gsub(&amp;quot;.git&amp;quot;, &amp;quot;&amp;quot;)
+  system(&amp;quot;#{command} #{remote_url}&amp;quot;)
+end&lt;/code&gt;&lt;/pre&gt;&lt;/noscript&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Installation is pretty basic - just download, make it executable by running &lt;code&gt;chmod +x git-browse&lt;/code&gt;, and then copy it somewhere that is referenced by your &lt;code&gt;$PATH&lt;/code&gt; variable (you can see what's in this variable by running &lt;code&gt;echo $PATH&lt;/code&gt; in a Terminal). Once you've done this, you should be able to enter any repository with Github remotes, and run &lt;code&gt;git browse&lt;/code&gt; to have the repository open in your default browser.&lt;/p&gt;
+
+&lt;p&gt;Extensions to this idea should be pretty easy - something I would be keen to see in a pull request, for example, would be to support opening arbitrary files - i.e. &lt;code&gt;git browse lib/writeideally/api.rb&lt;/code&gt; would open &lt;a href=&quot;https://github.com/joshmcarthur/WriteIdeally/blob/master/lib/writeideally/api.rb&quot;&gt;https://github.com/joshmcarthur/WriteIdeally/blob/master/lib/writeideally/api.rb&lt;/a&gt;. Having said that, my gsubbing is pretty gross, so that needs refactoring as well.&lt;/p&gt;
+
+&lt;p&gt;In any case, enjoy!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Upcoming: RateMyCourses</title>
+    <link href="http://blog.joshmcarthur.com/2011/11/14/upcoming-ratemycourses/"/>
+    <updated>2011-11-14T20:16:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/11/14/upcoming-ratemycourses</id>
+    <content type="html">&lt;p&gt;Tonight I'd like to talk about a project I've been working on in my spare time for the
+last few months. I'm super excited to see it coming together, and it's &lt;em&gt;nearly&lt;/em&gt; ready to
+go live.&lt;/p&gt;
+
+&lt;p&gt;The application is called &lt;strong&gt;RateMyCourses&lt;/strong&gt; - put simply, it's a way for University students
+to explore, rate, and comment on courses they've done to help out others. Inspired by
+such projects as &lt;a href=&quot;http://www.fixmystreet.com&quot;&gt;Fix my Street&lt;/a&gt; and &lt;a href=&quot;http://www.fixmytransport.com&quot;&gt;Fix my Transport&lt;/a&gt;, &lt;strong&gt;RateMyCourses&lt;/strong&gt; aims to increase the transparency of quality courses, lecturers, and tertiary education institutes within New Zealand. Over the last few months I've been not only building up this application, but also generating the dataset of courses thats at the heart of the application from scratch, pulling course details from all major Universities within New Zealand, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Auckland University&lt;/li&gt;
+&lt;li&gt;Massey University&lt;/li&gt;
+&lt;li&gt;Waikato University&lt;/li&gt;
+&lt;li&gt;Victoria University of Wellington&lt;/li&gt;
+&lt;li&gt;University of Canterbury&lt;/li&gt;
+&lt;li&gt;Lincoln University&lt;/li&gt;
+&lt;li&gt;Otago University&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;All up, I've got nearly 20,000 courses indexed, from these seven institutions. This is a huge opportunity for students to really engage with each other, with their Universities, and with new entrants. Over time, I'm hoping &lt;strong&gt;RateMyCourses&lt;/strong&gt; will become a valuable tool for course planning, as it uncovers the best courses, institutions, and educators in New Zealand (and, eventually, other countries).&lt;/p&gt;
+
+&lt;p&gt;This is just a preliminary post while I polish up some areas, and make sure I'm really happy with things, but I welcome feedback and comments as I move into the launch and adoption phases. I'm planning to launch in the upcoming weeks, and spend the summer with a core group of users ironing out the major issues, before really pushing it at Victoria next year.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Add jQuery to Any Page Really, Really Easily</title>
+    <link href="http://blog.joshmcarthur.com/2011/11/12/add-jquery-to-any-page/"/>
+    <updated>2011-11-12T21:27:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/11/12/add-jquery-to-any-page</id>
+    <content type="html">&lt;p&gt;When I'm working on a site, or analysing somebody else's, I often wish that jQuery was loaded into that page - it's an unbeatable tool for really digging into the site's source to debug something or work out how something has been done.&lt;/p&gt;
+
+&lt;p&gt;To help out with this, I've put together a quick bookmarket, &lt;a href=&quot;http://blog.joshmcarthur.com/2011/10/20/a-fun-little-bookmarklet/&quot;&gt;similar to the more fun one I've done a while ago&lt;/a&gt;. It works extremely simply - it just creates a script element, adds jQuery 1.7.0 (served from Google), and appends it to the page body. As soon as the script has loaded, jQuery can be used from within Web Inspector, Firebug, or whatever other Javascript console you use.&lt;/p&gt;
+
+&lt;p&gt;Here's the bookmarklet:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;javascript:var s=document.createElement('script');s.type='text/javascript';s.src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js';document.getElementsByTagName('body')[0].appendChild(s);&quot;&gt;Add jQuery&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To add this to your browser, you can either: right-click on this link, select 'Bookmark Link', or just drag-and-drop onto your Bookmarks toolbar. Once it's added, you can simply click on the bookmark on any page, and jQuery will be loaded into the page for you to use.&lt;/p&gt;
+
+&lt;p&gt;Here's the source:&lt;/p&gt;
+
+&lt;div&gt;&lt;figure role=code&gt;&lt;figcaption&gt;&lt;span&gt;Add jQuery Bookmarklet  &lt;/span&gt;&lt;/figcaption&gt;
+ &lt;div class=&quot;highlight&quot;&gt;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class='line'&gt;1&lt;/span&gt;
+&lt;span class='line'&gt;2&lt;/span&gt;
+&lt;span class='line'&gt;3&lt;/span&gt;
+&lt;span class='line'&gt;4&lt;/span&gt;
+&lt;span class='line'&gt;5&lt;/span&gt;
+&lt;span class='line'&gt;6&lt;/span&gt;
+&lt;span class='line'&gt;7&lt;/span&gt;
+&lt;span class='line'&gt;8&lt;/span&gt;
+&lt;span class='line'&gt;9&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class='code' width='100%'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Create the script tag&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;script&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Set the necessary attributes on the tag&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Add to the body tag (assume here we&amp;#39;re dealing with HTML, and there IS a body tag)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementsByTagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/div&gt;
+
+
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Generating 'Gem Install' Commands From 'Gem List'</title>
+    <link href="http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/"/>
+    <updated>2011-11-03T16:34:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list</id>
+    <content type="html">&lt;p&gt;Here at &lt;a href=&quot;http://3months.com&quot;&gt;3Months&lt;/a&gt;, we have a couple of monolithic projects that have been around for yonks - because of this, they don't have bundler set up, and many of them have incomplete or out-of-date gem requirements. Yesterday I needed to get one of these projects set up locally for the first time, so I was kindly lent the output of &lt;code&gt;gem list&lt;/code&gt; with which to install the gems at the correct versions required.&lt;/p&gt;
+
+&lt;p&gt;To make this problem a little easier in the future, I wrote a quick script to generate a massive shell command to install all the gems recorded in &lt;code&gt;gem list&lt;/code&gt;. Next time I, or someone else, needs to set up one of these types of project, I can run this script, and hand them the generated shell script. They can run this in their gemset of choice, and install all gems required - much easier!&lt;/p&gt;
+
+&lt;p&gt;Here's the script - alternatively, you can check it out the &lt;a href=&quot;https://gist.github.com/1335721&quot;&gt;Gist&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div&gt;&lt;figure role=code&gt; &lt;div class=&quot;highlight&quot;&gt;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class='line'&gt;1&lt;/span&gt;
+&lt;span class='line'&gt;2&lt;/span&gt;
+&lt;span class='line'&gt;3&lt;/span&gt;
+&lt;span class='line'&gt;4&lt;/span&gt;
+&lt;span class='line'&gt;5&lt;/span&gt;
+&lt;span class='line'&gt;6&lt;/span&gt;
+&lt;span class='line'&gt;7&lt;/span&gt;
+&lt;span class='line'&gt;8&lt;/span&gt;
+&lt;span class='line'&gt;9&lt;/span&gt;
+&lt;span class='line'&gt;10&lt;/span&gt;
+&lt;span class='line'&gt;11&lt;/span&gt;
+&lt;span class='line'&gt;12&lt;/span&gt;
+&lt;span class='line'&gt;13&lt;/span&gt;
+&lt;span class='line'&gt;14&lt;/span&gt;
+&lt;span class='line'&gt;15&lt;/span&gt;
+&lt;span class='line'&gt;16&lt;/span&gt;
+&lt;span class='line'&gt;17&lt;/span&gt;
+&lt;span class='line'&gt;18&lt;/span&gt;
+&lt;span class='line'&gt;19&lt;/span&gt;
+&lt;span class='line'&gt;20&lt;/span&gt;
+&lt;span class='line'&gt;21&lt;/span&gt;
+&lt;span class='line'&gt;22&lt;/span&gt;
+&lt;span class='line'&gt;23&lt;/span&gt;
+&lt;span class='line'&gt;24&lt;/span&gt;
+&lt;span class='line'&gt;25&lt;/span&gt;
+&lt;span class='line'&gt;26&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class='code' width='100%'&gt;&lt;pre&gt;&lt;code class='ruby'&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/env ruby&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;### gem_to_command.rb ###############################################################&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;# Produce a command to install the gems you currently have installed (using gem list)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;# Makes a simple Shell script that can be run on Linux or Mac OS X&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;# &lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;# Author: @sudojosh&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;######################################################################################&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;n&quot;&gt;gems&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`gem list`&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;install_gems.sh&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;wb&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;  &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;#!/usr/bin/env ruby&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;  &lt;span class=&quot;n&quot;&gt;gems&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gems&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;    &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;part&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;      &lt;span class=&quot;n&quot;&gt;part&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[^\w\.\-]/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;  &lt;span class=&quot;n&quot;&gt;gems&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;    &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;gem install &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; -v=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;    &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot; &amp;amp;&amp;amp; &amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gems&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;last&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Wrote install_gems.sh&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here's what it does:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Get the output of &lt;code&gt;gem list&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Open a .sh file for writing&lt;/li&gt;
+&lt;li&gt;Iterate through the &lt;code&gt;gem list&lt;/code&gt; output, and parse from the file the name of the gem and the lowest version number (lowest is safer than highest, even though there &lt;em&gt;should&lt;/em&gt; only ever be one)&lt;/li&gt;
+&lt;li&gt;Assemble a &lt;code&gt;gem install&lt;/code&gt; command with the &lt;code&gt;--no-rdoc --no-ri&lt;/code&gt; arguments, and write this to the file.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>A Fun Little Bookmarklet</title>
+    <link href="http://blog.joshmcarthur.com/2011/10/20/a-fun-little-bookmarklet/"/>
+    <updated>2011-10-20T13:28:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/10/20/a-fun-little-bookmarklet</id>
+    <content type="html">&lt;p&gt;I'm sure this has been done before, but after noticing &lt;a href=&quot;http://www.1-day.co.nz&quot;&gt;1-day's&lt;/a&gt;  'Look Busy' feature, I just had to write a bookmarklet to load this up on any site!&lt;/p&gt;
+
+&lt;p&gt;If you just want to try it out, here's the link &lt;a href=&quot;javascript:var busy=document.createElement('div');var body=document.getElementsByTagName('body')[0];var max_width_cache=body.getAttribute('max-width');body.style.maxWidth='100%';busy.setAttribute('id','lookbusy');busy.setAttribute('style','position: absolute; z-index: 1000; width: 100%; height: 100%; top: 0px; left: 0px; right: 0px; bottom: 0px; background: #FFF url(http://www.1-day.co.nz/images/2010_mission_critical_development_strategy.png) no-repeat 0 0;');var close=document.createElement('a');close.setAttribute('class','busy close');close.setAttribute('style','position: fixed; z-index: 1001; right: 10px; bottom: 10px; background-color: #FFF; color: #000; font-size:10px');close.setAttribute('href','#');close.innerText='OK, Clear';close.setAttribute('onclick',&amp;quot;javascript:body.removeChild(document.getElementById('lookbusy'));body.style.maxWidth = &amp;quot; + max_width_cache);busy.appendChild(close);body.appendChild(busy)&quot;&gt;Look Busy Bookmarklet&lt;/a&gt; - either right-click on the link and 'Copy URL' and paste into a new bookmark, or drag to your bookmarks bar or folder. It should work in Chrome, Safari, Firefox and IE7-9&lt;/p&gt;
+
+&lt;p&gt;Here's the source code for anyone interested in seeing how this works:&lt;/p&gt;
+
+&lt;div&gt;&lt;figure role=code&gt;&lt;figcaption&gt;&lt;span&gt;Look Busy Bookmarklet  &lt;/span&gt;&lt;/figcaption&gt;
+ &lt;div class=&quot;highlight&quot;&gt;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class='line'&gt;1&lt;/span&gt;
+&lt;span class='line'&gt;2&lt;/span&gt;
+&lt;span class='line'&gt;3&lt;/span&gt;
+&lt;span class='line'&gt;4&lt;/span&gt;
+&lt;span class='line'&gt;5&lt;/span&gt;
+&lt;span class='line'&gt;6&lt;/span&gt;
+&lt;span class='line'&gt;7&lt;/span&gt;
+&lt;span class='line'&gt;8&lt;/span&gt;
+&lt;span class='line'&gt;9&lt;/span&gt;
+&lt;span class='line'&gt;10&lt;/span&gt;
+&lt;span class='line'&gt;11&lt;/span&gt;
+&lt;span class='line'&gt;12&lt;/span&gt;
+&lt;span class='line'&gt;13&lt;/span&gt;
+&lt;span class='line'&gt;14&lt;/span&gt;
+&lt;span class='line'&gt;15&lt;/span&gt;
+&lt;span class='line'&gt;16&lt;/span&gt;
+&lt;span class='line'&gt;17&lt;/span&gt;
+&lt;span class='line'&gt;18&lt;/span&gt;
+&lt;span class='line'&gt;19&lt;/span&gt;
+&lt;span class='line'&gt;20&lt;/span&gt;
+&lt;span class='line'&gt;21&lt;/span&gt;
+&lt;span class='line'&gt;22&lt;/span&gt;
+&lt;span class='line'&gt;23&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class='code' width='100%'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Create a new div tag to contain our image&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;busy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;div&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementsByTagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;max_width_cache&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;maxWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;maxWidth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;100%&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;busy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;lookbusy&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Add a background image, and position the div tag above all other content and make it fill the screen&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;busy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;style&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;position: absolute; z-index: 1000; width: 100%; height: 100%; top: 0px; left: 0px; right: 0px; bottom: 0px; background: #FFF url(http://www.1-day.co.nz/images/2010_mission_critical_development_strategy.png) no-repeat 0 0;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Add a inconspicuous link to close the image&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;busy close&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;style&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;position: fixed; z-index: 1001; right: 10px; bottom: 10px; background-color: #FFF; color: #000; font-size:10px&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;href&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;#&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;innerText&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;OK, Clear&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;onclick&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;javascript:body.removeChild(document.getElementById(&amp;#39;lookbusy&amp;#39;));body.style.maxWidth = &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;max_width_cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Add the close image to the look busy div tag&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;busy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c1&quot;&gt;// Add the look busy div tag to the body of the document&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;busy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Give it a go! It's super handy for when you're checking out &lt;a href=&quot;http://www.trademe.co.nz&quot;&gt;TradeMe&lt;/a&gt;, &lt;a href=&quot;http://failblog.org&quot;&gt;Failblog&lt;/a&gt;, or &lt;a href=&quot;http://images.google.com?q=wink&quot;&gt;anything similar&lt;/a&gt;!&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Safely Start and Stop VirtualBox VMs with init.d</title>
+    <link href="http://blog.joshmcarthur.com/2011/10/19/init-dot-d-script-for-virtualbox-vms/"/>
+    <updated>2011-10-19T17:05:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/10/19/init-dot-d-script-for-virtualbox-vms</id>
+    <content type="html">&lt;p&gt;Recently I've rolled out a virtual machine host box to run headless VMs (headless means that there is no display, keyboard etc plugged into it), as these make great test and experiment machines for trying new things out. As part of this rollout, I mashed a couple of blogs and some documentation together and came up with this script:&lt;/p&gt;
+
+&lt;div&gt;&lt;figure role=code&gt;&lt;figcaption&gt;&lt;span&gt;/etc/init.d/virtual_machines  &lt;/span&gt;&lt;/figcaption&gt;
+ &lt;div class=&quot;highlight&quot;&gt;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class='line'&gt;1&lt;/span&gt;
+&lt;span class='line'&gt;2&lt;/span&gt;
+&lt;span class='line'&gt;3&lt;/span&gt;
+&lt;span class='line'&gt;4&lt;/span&gt;
+&lt;span class='line'&gt;5&lt;/span&gt;
+&lt;span class='line'&gt;6&lt;/span&gt;
+&lt;span class='line'&gt;7&lt;/span&gt;
+&lt;span class='line'&gt;8&lt;/span&gt;
+&lt;span class='line'&gt;9&lt;/span&gt;
+&lt;span class='line'&gt;10&lt;/span&gt;
+&lt;span class='line'&gt;11&lt;/span&gt;
+&lt;span class='line'&gt;12&lt;/span&gt;
+&lt;span class='line'&gt;13&lt;/span&gt;
+&lt;span class='line'&gt;14&lt;/span&gt;
+&lt;span class='line'&gt;15&lt;/span&gt;
+&lt;span class='line'&gt;16&lt;/span&gt;
+&lt;span class='line'&gt;17&lt;/span&gt;
+&lt;span class='line'&gt;18&lt;/span&gt;
+&lt;span class='line'&gt;19&lt;/span&gt;
+&lt;span class='line'&gt;20&lt;/span&gt;
+&lt;span class='line'&gt;21&lt;/span&gt;
+&lt;span class='line'&gt;22&lt;/span&gt;
+&lt;span class='line'&gt;23&lt;/span&gt;
+&lt;span class='line'&gt;24&lt;/span&gt;
+&lt;span class='line'&gt;25&lt;/span&gt;
+&lt;span class='line'&gt;26&lt;/span&gt;
+&lt;span class='line'&gt;27&lt;/span&gt;
+&lt;span class='line'&gt;28&lt;/span&gt;
+&lt;span class='line'&gt;29&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class='code' width='100%'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;div class='line'&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c&quot;&gt;# virtual_machines  Start and stop virtual machines when the host changes state&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nv&quot;&gt;VMUSER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;administrator
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$1&amp;quot;&lt;/span&gt; in
+&lt;/div&gt;&lt;div class='line'&gt;    start&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Starting VirtualBox VMs&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f /etc/virtualbox/machines_enabled &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;            &lt;/span&gt;cat /etc/virtualbox/machines_enabled | &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;VM; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;              &lt;/span&gt;sudo -H -b -u &lt;span class=&quot;nv&quot;&gt;$VMUSER&lt;/span&gt; /usr/bin/VBoxHeadless -startvm &lt;span class=&quot;s2&quot;&gt;&amp;quot;$VM&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;            &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;        fi&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        ;;
+&lt;/div&gt;&lt;div class='line'&gt;    stop&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Saving state of VirtualBox VM...&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        cat /etc/virtualbox/machines_enabled | &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;VM; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;          &lt;/span&gt;sudo -H -u &lt;span class=&quot;nv&quot;&gt;$VMUSER&lt;/span&gt; /usr/bin/VBoxManage controlvm &lt;span class=&quot;s2&quot;&gt;&amp;quot;$VM&amp;quot;&lt;/span&gt; savestate
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        ;;
+&lt;/div&gt;&lt;div class='line'&gt;    *&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Usage: /etc/init.d/virtual_machines {start|stop}&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;        &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;/div&gt;&lt;div class='line'&gt;        ;;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/div&gt;&lt;div class='line'&gt;
+&lt;/div&gt;&lt;div class='line'&gt;&lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
+&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I wrote this because this isn't something that is supported directly by VirtualBox, and it's essential that on a headless server that these virtual machines be able to go up and down happily without harm and reliably. It supports start and stop explanations and uses savestate, rather than poweroff - essentially, as the host server goes down, it will 'hibernate' each VM, and then restore when the server starts back up again.&lt;/p&gt;
+
+&lt;p&gt;Another feature that I built into this was the use of a file in which a list of VMs can be specified to start and stop - for example, if you only want this script to deal with a subset of the virtual machines you have set up on the host server.&lt;/p&gt;
+
+&lt;p&gt;An example of this file might look like this:&lt;/p&gt;
+
+&lt;div&gt;&lt;figure role=code&gt;&lt;figcaption&gt;&lt;span&gt;/etc/virtualbox/virtual_machines &lt;/span&gt;&lt;/figcaption&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class='line'&gt;1&lt;/span&gt;
+&lt;span class='line'&gt;2&lt;/span&gt;
+&lt;span class='line'&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class='code' width='100%'&gt;&lt;pre&gt;&lt;code class=''&gt;&lt;div class='line'&gt;winxp_development
+&lt;/div&gt;&lt;div class='line'&gt;win7_development
+&lt;/div&gt;&lt;div class='line'&gt;ubuntu_11_10_development&lt;/div&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It works really well for me, and since it's something I had trouble tracking down, hopefully I can make someone's life a little easier with this solution.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Action Mailer Interceptors</title>
+    <link href="http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors/"/>
+    <updated>2011-10-06T16:51:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/10/06/action-mailer-interceptors</id>
+    <content type="html">&lt;p&gt;ActionMailer Interceptors are a great way to test the full stack of your mailing in Rails from the generation from data through to receiving the email in your client. They are similar to ActiveRecord's &lt;code&gt;before_x&lt;/code&gt;-type callbacks, and let you change something about the message being sent right before it's actually dispatched.&lt;/p&gt;
+
+&lt;p&gt;The most common purpose I use these for is to redirect mail being sent from the application to either my Inbox, or some shared account (if it's on a project where I'm not the only developer). This lets me make sure that the HTML in the message is displayed properly, and that the data gets injected into the content the way I expect it to be.&lt;/p&gt;
+
+&lt;p&gt;Here's a quick example of how to use a Mail interceptor for this purpose:&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# lib/development_mail_interceptor.rb
+class DevelopmentMailInterceptor
+  def self.delivering_email(mail)
+    mail.subject = &quot;&amp;lt;#{mail.to}&amp;gt; #{mail.subject}&quot;
+    mail.to = &quot;me@mywork.co.nz&quot;
+  end
+end
+
+# config/initializers/mail_interceptors.rb
+require 'development_mail_interceptor'
+ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;...and give one of your mailers a go.&lt;/p&gt;
+
+&lt;p&gt;This is a very simple example, of course, but there are a lot of uses for this type of thing - logging &amp;amp; auditing, checking against quotas, analysis, etc. etc.&lt;/p&gt;
+
+&lt;p&gt;What really triggered this post though, was a odd problem I came across when trying to get this interceptor to work. An ActionMailer method can be triggered using one of two methods: either &lt;code&gt;deliver&lt;/code&gt; or &lt;code&gt;deliver!&lt;/code&gt; - the main difference between the two is that the second will throw exceptions if it cannot be sent, which is why I tend to prefer using it. Something to keep in mind though, is that using &lt;code&gt;deliver!&lt;/code&gt; will call any registered Mail Observers, but &lt;strong&gt;not Interceptors&lt;/strong&gt; - meaning that your mail will be sent unaltered.&lt;/p&gt;
+
+&lt;p&gt;It really was a frustrating process to debug, but after looking at the &lt;a href=&quot;https://github.com/mikel/mail&quot;&gt;Mail gem&lt;/a&gt; source code (ActionMailer back-ends onto this gem for it's mail setup and delivery processes), in particular the &lt;a href=&quot;https://github.com/mikel/mail/blob/master/lib/mail/message.rb#L227&quot;&gt;Message class&lt;/a&gt;, I noticed this crucial difference between the two. Resolving the issue is, of course, as simple as using &lt;code&gt;deliver&lt;/code&gt; - without the exclamation mark. After that, your Interceptors will be triggered just as they should be.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Overriding Action Caches</title>
+    <link href="http://blog.joshmcarthur.com/2011/09/30/overriding-action-caches/"/>
+    <updated>2011-09-30T11:48:00+13:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/09/30/overriding-action-caches</id>
+    <content type="html">&lt;p&gt;Recently, I have been working on a web application that is quite media rich, and is expected to run into quite a bit of traffic. I've been working on building an API for a front end system, using JSON to handle passing this data back and forth.&lt;/p&gt;
+
+&lt;p&gt;Obviously with this amount of traffic, and the size of some of the JSON collections we were having to marshall and store via Rails, we were going to need some pretty intense caching to reduce the load on Rails, and our database server. We had to balance this need, however, with the requirement that data should be live, or close to live (i.e. around 5-10 minutes) - in particular, statistics, which are calculated on-demand for several responses.&lt;/p&gt;
+
+&lt;p&gt;The strategy we chose to manage this balance was to use Rails' provided &lt;code&gt;caches_action&lt;/code&gt; method to cache our JSON responses, building up a cache key from certain parameters, as well as some meta-data, for example, the user's logged-in status. Because we were using memcached, we could use the &lt;code&gt;:expires_in&lt;/code&gt; option to tell the memcached store to expire the cached value after x minutes.&lt;/p&gt;
+
+&lt;p&gt;This approach worked for a while, but we found we had a pretty major problem - while the data was cached, it went alright, but as soon as the cache expired we were having loads of users hitting a response that took way to long to build (before we optimized queries, 30+ seconds). So, we needed another fix.&lt;/p&gt;
+
+&lt;p&gt;To fix this problem, we tried out adding some cron tasks that used curl to ping the cached URLs, to try and preload the cache so that less users would be hitting the DB. This only partially fixed the problem though, so we identified a solution that would work a little better for us.&lt;/p&gt;
+
+&lt;p&gt;What we wanted to do was to leave our existing caching in place - aside from the expiry, it was working fine, and we didn't want to rework everything. With this in mind though, we needed a way to force a refresh of the data in the cache external from the controller. What we ended up implementing was a monkeypatch on Rails' caches_action-related methods, that allows us to pass in an &lt;code&gt;:overwrite&lt;/code&gt; option - this can be a Proc, or just a boolean - basically, when the value of &lt;code&gt;:overwrite&lt;/code&gt; is true, Rails will bypass the cached value, grab the &lt;em&gt;new value&lt;/em&gt;, and load this into the cache - effectively refreshing the value without a user having to trigger the process.&lt;/p&gt;
+
+&lt;p&gt;Here's the monkeypatch code - have a scan through it, and I'll explain it below:&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require 'set'
+
+module ActionController #:nodoc:
+  module Caching
+
+    module Actions
+    extend ActiveSupport::Concern
+
+      protected
+      class ActionCacheFilter #:nodoc:
+        def initialize(options, &amp;amp;block)
+          @cache_path, @store_options, @cache_layout =
+            options.values_at(:cache_path, :store_options, :layout)
+        end
+
+        def filter(controller)
+          path_options = if @cache_path.respond_to?(:call)
+            controller.instance_exec(controller, &amp;amp;@cache_path)
+          else
+            @cache_path
+          end
+
+          cache_path = ActionCachePath.new(controller, path_options || {})
+          overwrite = if @overwrite = @store_options.fetch(:overwrite, nil)
+            @overwrite.respond_to?(:call) ? controller.instance_exec(controller, &amp;amp;@overwrite) : @overwrite
+          else
+            false
+          end
+
+          body = overwrite ? nil : controller.read_fragment(cache_path.path, @store_options)
+
+          unless body
+            controller.action_has_layout = false unless @cache_layout
+            yield
+            controller.action_has_layout = true
+            body = controller._save_fragment(cache_path.path, @store_options)
+          end
+
+          body = controller.render_to_string(:text =&amp;gt; body, :layout =&amp;gt; true) unless @cache_layout
+          controller.response_body = body
+          controller.content_type = Mime[cache_path.extension || :html]
+        end
+      end
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;By dropping this code into &lt;code&gt;config/initializers&lt;/code&gt;, this code gets patched into the ActionController::Caching::Actions::ActionCacheFilter class, and overrides the &lt;code&gt;initalize&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; methods to let us a) pass in an override option, and b) choose to refresh the cache if the override option is set.&lt;/p&gt;
+
+&lt;p&gt;The filter method performs as normal until it has finished generating the cache path - at this point, it would normally return the cached response if it was there, and if it had not expired. Instead, my colleague &lt;a href=&quot;http://telos.co.nz&quot;&gt;James Moriaty&lt;/a&gt; replaced some code here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;First, it retrieves the value of the &lt;code&gt;:overwrite&lt;/code&gt; option passed in to the &lt;code&gt;caches_action&lt;/code&gt; method from the &lt;code&gt;@store_options&lt;/code&gt; hash - if it's a Proc, it executes it here to get the value, otherwise assumes it's a boolean variable.&lt;/li&gt;
+&lt;li&gt;If the &lt;code&gt;:overwrite&lt;/code&gt; option has not been passed in, it returns false - i.e. don't overwrite the cache.&lt;/li&gt;
+&lt;li&gt;If the overwrite value is true, it sets the body to nil, so that it will be re-built. Otherwise, it does the usual and returns the cached response from Memcache.&lt;/li&gt;
+&lt;li&gt;From here, it more or less goes back to the default class, rebuilding the response from the database.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;In our application's case, we use this functionality by tweaking our cron jobs a little to pass in a particular parameter - we then added the &lt;code&gt;:overwrite&lt;/code&gt; option to our &lt;code&gt;caches_action&lt;/code&gt; methods, with a Proc that returns true if this parameter equals the correct value.&lt;/p&gt;
+
+&lt;p&gt;So far, this solution has worked fantastically - now, hardly any of our users hit the database - instead, they are heading to memcache to grab that response, while our background cron jobs rebuild the data that will get returned to them. Using a parameter for refreshing the cache also lets us easily refresh manually for testing or to check for a value.&lt;/p&gt;
+
+&lt;p&gt;This solution is clean, simple and easy to implement. I suggest that if you are facing similar problems, that you give it a go - it's really adaptable, and requires few changes if you are already using action caching. Full credit to James for thinking up and implementing this solution - I'm just documenting it.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Howto: Database Backup and Restore</title>
+    <link href="http://blog.joshmcarthur.com/2011/09/23/howto-database-backup-and-restore/"/>
+    <updated>2011-09-23T13:26:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/09/23/howto-database-backup-and-restore</id>
+    <content type="html">&lt;p&gt;An inherent part of developing web applications is managing your datastores - typically, a relational database such as MySQL or PostgreSQL. Today, I'm going to quickly cover off how to backup and restore for both of these databases.&lt;/p&gt;
+
+&lt;h2&gt;What you'll need&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Either PostgreSQL or MySQL&lt;/li&gt;
+&lt;li&gt;Access to a database (preferably one with data in it)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Why this is useful to know&lt;/h2&gt;
+
+&lt;p&gt;Lots of interactions with databases have the potential to destroy or modify data (in a bad way). When using frameworks such as Ruby on Rails, it's even easier to, say, accidently delete all of your Users (Horribly easy in DataMapper, unfortunately). It's important that before you do anything with data that's destructive, you have a backup of your database that you can restore from quickly and easily.&lt;/p&gt;
+
+&lt;h2&gt;PostgreSQL&lt;/h2&gt;
+
+&lt;p&gt;Postgres databases are backed up using the &lt;code&gt;pg_dump&lt;/code&gt; command - a command-line utility that comes packaged with the database server. Here's the command:&lt;/p&gt;
+
+&lt;p&gt;``` sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pg_dump --no-owner -U [username] -W [database_name] &amp;gt; [file to dump to].sql.dump
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Let me explain these options and why I use them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--no-owner&lt;/code&gt;: By default, Postgres dumps the database with lots of SET OWNER TO statements. I like to take these out of the dump, as I'm not necessarily restoring the dump to exactly the same server with exactly the same users. Using --no-owner means that ownership statements will be excluded.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-U [username]&lt;/code&gt;: This lets you pass in the database user name your web application usually uses to connect - using this is just good practise, as it ensures that what you're dumping is exactly what the web application has.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-W&lt;/code&gt;: This option, used in conjunction with the &lt;code&gt;-U&lt;/code&gt; flag, prompts for the password when you run the command&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[database_name]&lt;/code&gt;: This is the name of the database that you want to dump&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[file to dump to]&lt;/code&gt;: This is the file that the SQL script that pg_dump produces will be piped into. I normally name this file with the &lt;code&gt;.sql.dump&lt;/code&gt; extension, so that I can see it's a SQL dump straight off.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h4&gt;Restoring a database dump&lt;/h4&gt;
+
+&lt;p&gt;Restoring a Postgresql dump is really easy, and involves using the standard &lt;code&gt;psql&lt;/code&gt; client to connect to the database and execute the SQL script in your dump file.&lt;/p&gt;
+
+&lt;p&gt;First of all, make sure that you have created the database you want to load the data into. In this example, let's say I've dumped from the &lt;code&gt;facebook_production&lt;/code&gt; database to the file &lt;code&gt;facebook_production_23092011.sql.dump&lt;/code&gt;, and I want to restore into the &lt;code&gt;facebook_development&lt;/code&gt; database so that I can test out some code against some production data. I want to connect to the database using psql as the web application user, and load the dump in:&lt;/p&gt;
+
+&lt;p&gt;``` sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;psql -U facebook -W facebook_development &amp;lt; facebook_production_23092011.sql.dump`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Note how I am using the opposite of the less-than symbol I used above - this basically denotes the direction of the data - it's coming &lt;em&gt;from&lt;/em&gt; the file, going &lt;em&gt;to&lt;/em&gt; the database.&lt;/p&gt;
+
+&lt;p&gt;Upon running this commmand (with your own database, of course), you will first be prompted for your database user's password, and will then see a bunch of SQL statements being executed. Once it's completed, your database has been loaded successfully - you can jump in using psql if you'd like, and query around a bit.&lt;/p&gt;
+
+&lt;h2&gt;MySQL&lt;/h2&gt;
+
+&lt;p&gt;MySQL databases are backed up with the &lt;code&gt;mysqldump&lt;/code&gt; program - one I'm not as familiar with as Postgres, but I know the basics, and largely that's all you need with this type of thing. The main thing to keep in mind is that the process is the same as for PostgreSQL above - use the dump program to write the database out to a file (in the form of SQL statements), and then use the database client program &lt;code&gt;mysql&lt;/code&gt; in this case, to execute the commands in the file against the database being restored to. Here's the command to dump a MySQL file to disk:&lt;/p&gt;
+
+&lt;p&gt;``` sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysqldump -U [username] -P [database_name] &amp;gt; [file to dump to].sql.dump
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;The options are more or less as I've described above, except that &lt;code&gt;-P&lt;/code&gt; is substituted for &lt;code&gt;-W&lt;/code&gt;, and I've still stuck with the &lt;code&gt;.sql.dump&lt;/code&gt; naming scheme.&lt;/p&gt;
+
+&lt;h4&gt;Restoring a database dump&lt;/h4&gt;
+
+&lt;p&gt;This process is almost identical to the PostgreSQL restore process. Let's stick with the same example format we already have - dumping from a database called &lt;code&gt;facebook_production&lt;/code&gt; to file &lt;code&gt;facebook_production_23092011.sql.dump&lt;/code&gt;, restoring into a database called &lt;code&gt;facebook_development&lt;/code&gt; - here's the command we need for that:&lt;/p&gt;
+
+&lt;p&gt;``` sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysql -U facebook -P facebook_development &amp;lt; facebook_production_23092011.sql.dump
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Once again, you'll be prompted for your password, but for this one you won't see the output of the SQL statements - it will take a couple of seconds, and then the program will exit. This is normal however - if you'd like to see the output of the batch load, you can add &lt;code&gt;-v -v -v&lt;/code&gt; before the &lt;code&gt;&amp;lt;&lt;/code&gt; symbol to turn verbosity to level three, otherwise you can go ahead and jump into your database and make sure everything is there.&lt;/p&gt;
+
+&lt;h2&gt;Tips:&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you don't have a database user account yet, on Unix and Linux you can use &lt;code&gt;sudo su postgres&lt;/code&gt; to login as the 'postgres' user - a root-like database user that gets created for you when Postgres is installed. MySQL has a root account, but it's not a system user - you are normally prompted for a root username and password when you install MySQL. If you &lt;em&gt;are&lt;/em&gt; using the Postgres user, you don't need to pass in a username or password in the above commands, but you need to remember that your restored databases will be owned by 'postgres', not you web application database user.&lt;/li&gt;
+&lt;li&gt;A handy place to put database dumps that you are planning to use right away is &lt;code&gt;/tmp&lt;/code&gt; (Only on Unix and Linux). This is a directly that is writeable by everyone, that will get 'garbage collected' periodically. This is especially handy if you are logging in as the 'postgres' user, as typically this user won't have write permissions on many other directories&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Introducing Blog Broadcaster</title>
+    <link href="http://blog.joshmcarthur.com/2011/09/14/introducing-blog-broadcaster/"/>
+    <updated>2011-09-14T19:04:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/09/14/introducing-blog-broadcaster</id>
+    <content type="html">&lt;p&gt;I've just completed a Blog Broadcaster for this blog. It had a couple of interesting technical things, and I needed to test it properly, so here's this post!&lt;/p&gt;
+
+&lt;p&gt;I recently migrated this blog from &lt;a href=&quot;http://tumblr.com&quot;&gt;Tumblr&lt;/a&gt;, and while Tumblr was pretty awesome and easy to use, it didn't have great support for blocks of code and preformatted comment, and, like &lt;a href=&quot;http://www.radiantcms.org&quot;&gt;Radiant CMS&lt;/a&gt;, it stored layouts, stylesheets, and all of that kind of thing in a database somewhere - it wasn't in source control, and making changes to it was dangerous.&lt;/p&gt;
+
+&lt;p&gt;One thing that I immediately missed from Tumblr, however, was it's ability to post to Facebook and Twitter automatically whenever I published a post. As I don't post that often, it's really important to me that I market my blog as much as I can - like my Github profile, the content on my blog is a reflection of my knowledge and skill as a developer, and so I want to get that in front of people as much as possible - broadcasting to social networks is a great way of achieving that.&lt;/p&gt;
+
+&lt;p&gt;With my blog on Github, I needed a way to broadcast new posts to these social networks. Github has a built-in post-receive hook to post to Twitter, but I really needed something more than that. Here's my list of requirements:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It should automatically post without me needing to do any special task&lt;/li&gt;
+&lt;li&gt;It should be conditional - i.e. it shouldn't post &lt;em&gt;everytime&lt;/em&gt; I change something&lt;/li&gt;
+&lt;li&gt;It should support both Facebook and Twitter&lt;/li&gt;
+&lt;li&gt;It should be able to be triggered by a commit&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;What I ended up building was a Sinatra app whose sole purpose was to receive POST'ed commit information, parse it into a Facebook and Twitter post, and broadcast it. It's hosted on Heroku, and gets triggered by a Github &lt;a href=&quot;http://help.github.com/post-receive-hooks/&quot;&gt;Post-Receive Hooks&lt;/a&gt;. I did run into a couple of problems along the way - the main one was sorting out being able to post Facebook updates without being logged in, or even needing to be involved at the process at all. This wasn't too difficult, but I did need to get an access token that was long-lived, and have the ability to update this if necessary. I overcame this problem by adding some methods to my Sinatra app that will allow me to update the access token if it ever expires, or change the Facebook account used if necessary.&lt;/p&gt;
+
+&lt;p&gt;The second problem I ran into wasn't really a problem, but it was a challenge to try and think of a nice way of doing it. Basically I needed to store the Facebook access token somewhere so that I could use it when I needed it - but I didn't have a database, and I didn't particularly want to add one just for storing a single string. Since this is running on Heroku (Bamboo stack, not Cedar), I was also on a read-only filesystem, so couldn't store it in a simple text file either. In this end, I chose to store the value in Memcache using the Heroku add-on. This still isn't necessarily a good solution, as this storage method isn't guaranteed to be persistent, however it should suit my needs - it doesn't particularly matter if I lose the access token, the application will gracefully degrade and just post to Twitter until I log in to Facebook via the app again.&lt;/p&gt;
+
+&lt;p&gt;So, I think I've come up with a good solution. It started off as a simple broadcaster for my blog, but I think it has a lot of potential for use with any open-source project that has social networking presence - I think it's a much more elegant and flexible hook than that which Github provides, and I hope it get's a bit of use.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Select Anything From Everything with Select</title>
+    <link href="http://blog.joshmcarthur.com/2011/09/09/select-anything-from-everything/"/>
+    <updated>2011-09-09T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/09/09/select-anything-from-everything</id>
+    <content type="html">&lt;p&gt;I was recently called upon to make a horrible select input for a Ruby on Rails project - essentially, there was this model, let's call it a Snafu, and one Snafu could share an attachment to any number of models.&lt;/p&gt;
+
+&lt;p&gt;This select was difficult because I couldn't just have a selection of record ID's - I would have to use both the model type &lt;strong&gt;as well as&lt;/strong&gt; the model ID in order to be able to track down these records when the form was submitted. Here's how I did it:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1: Rendering the select &lt;/strong&gt;
+First of all, we need to render a selection box for the 'New Snafu' form. This selection box should be populated by a number of model collections, keyed by an identifier that specifies both the model name and the model ID. Time for a model method, and a helper!&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def options_for_select_anything(selected = nil)
+ #Make a hash of the things we want to select from
+ options = {
+  'Foo' =&amp;gt; Foo.active.map(&amp;amp;item_for_select_anything),
+  'Bar' =&amp;gt; Bar.active.map(&amp;amp;item_for_select_anything)
+ }
+ #Use a Rails helper to actually get the tags
+ grouped_options_for_select(options, selected)
+end
+
+def item_for_select_anything
+ # Return an array of the record name and the identifier we want to use
+ # The record name in this case is the display value, while the identifier
+ # is the data value
+ lambda { |record| [record.name, &quot;#{record.id}-#{record.class.name}&quot;] }
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Now that we have these helpers, we have a grouped collection of options, in which each option tag within the select will look something like '&lt;code&gt;&amp;lt;option value=&quot;1-Foo&quot;&amp;gt;Foo #1&amp;lt;/option&amp;gt;&lt;/code&gt;' - let's render our select.&lt;/p&gt;
+
+&lt;p&gt;``` erb&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;% form_for @snafu do |form| %&amp;gt;
+    &amp;lt;p&amp;gt;
+        &amp;lt;%= form.label :item_identifier, 'Item' %&amp;gt;&amp;lt;br /&amp;gt;
+        &amp;lt;%= form.select :item_identifier, options_for_select_anything %&amp;gt;
+    &amp;lt;/p&amp;gt;
+    &amp;lt;p&amp;gt;
+        &amp;lt;%= form.submit 'Create' %&amp;gt;
+    &amp;lt;/p&amp;gt;
+&amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;This is a basic form of course - your form will have all the other attributes you need, but the key thing to notice here is that we aren't trying to load against our Polymorphic 'item' association within the form - instead, we're just going to send through a 'item_identifier' parameter that we can use to &lt;em&gt;find&lt;/em&gt; the item in our model. Let's take a look at the sections we need.&lt;/p&gt;
+
+&lt;p&gt;First of all, we need to have the Polymorphic association in our model, if you haven't already done this.&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Snafu.rb
+
+class Snafu &amp;lt; ActiveRecord::Base
+    # Snip
+    belongs_to :item, :polymorphic =&amp;gt; true
+    # Snip
+end
+
+# Migration
+add_column :snafus, :item_id, :integer, :null =&amp;gt; false
+add_column :snafus, :item_type, :string, :null =&amp;gt; false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Next of all, we need to add an &lt;code&gt;attr_writer&lt;/code&gt; to our model - this will hold the 'item_identifier' from our form submission until we are ready to use it.&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Snafu.rb
+
+attr_writer :item_identifier
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Finally, we need to add a &lt;code&gt;before_validation&lt;/code&gt; filter to associate the record identified by our item_identifier with our model instance:&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Snafu.rb
+class Snafu &amp;lt; ActiveRecord::Base
+    # Snip
+    belongs_to :item, :polymorphic =&amp;gt; true
+    before_validation :set_item
+
+    attr_writer :item_identifier
+
+    # Snip
+
+    private
+
+    def set_item
+        if self.item_identifier
+        id, model = self.item_identifier.split('-')
+        self.item = Kernel.const_get(model).send(:find, id) rescue nil
+    end
+ end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Let's take a look at what we've done there - really, the meat of it is in our set_item method, that gets called before validations run (so that we will have a real item set before we may need to run validations on that item). First of all, set_item checks that we have set a item_identifier - if we haven't we don't want to run into Nil exceptions! Given an item_identifier is present, we want to split our identifier (Remember, this is in the format id-class name), into two parts. Finally, we do a little Ruby magic to get the class using Kernel.const_get, and then call &lt;code&gt;find&lt;/code&gt; on it with the ID that we want. If anything goes wrong with this bit (The class not existing, for example), then we just set item to nil.&lt;/p&gt;
+
+&lt;p&gt;There we have it then - it's a horrible situation, but I feel like it's a pretty good approach. The logic is where it should be (models and helpers), the views and controllers feel clean, and it's flexible to be reused pretty easily.&lt;/p&gt;
+
+&lt;p&gt;As a final tweak, there's one more change you may want to make - that is setting the selected item when we return to our form. If you take a look at the helper method we defined above, you'll notice that we already support a selected option - we just need to pass this in. To do this, we want to add a method to our 'Snafu' class that will return a string of the item id and the item name concatenated with a dash - i.e., the format that our select box in the form is expecting. Go ahead and add the method now:&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Snafu.rb
+
+def item_identifier
+    # Return the owner_identifier set using the attr_writer, if it exists
+    return @owner_identifier if @owner_identifier
+
+    # Otherwise, try and build it from the current item saved against the model
+    [self.item.id, self.item.class.name].join('-') if self.item.present?
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;With that method, can can just change our select input in the form to make use of this value:&lt;/p&gt;
+
+&lt;p&gt;``` ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# new.html.erb
+# Snip
+&amp;lt;%= form.select :item_identifier, options_for_select_anything(form.object.item_identifier) %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;There we are! Now when we show the form, the selected item will appear, just as we wanted.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Capistrano rvm-shell: command not found error</title>
+    <link href="http://blog.joshmcarthur.com/2011/08/22/capistrano-rvm-shell-command-not-found-error/"/>
+    <updated>2011-08-22T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/08/22/capistrano-rvm-shell-command-not-found-error</id>
+    <content type="html">&lt;p&gt;I've just come across this problem, and I had to share it here - I can't find
+anywhere else on the the Internet where the solution is specifically stated -
+it's just alluded towards. If you are using RVM's Capistrano integration, you
+may come across a CommandNotFoundError to do with rvm-shell not being under /
+usr/local/rvm/bin (Which is exactly where it should be). Upon searching the
+internet, you will find that you have to upgrade RVM (you don't), and that when
+installed for a local user, RVM puts rvm-shell under ~/bin (But, you know, it's
+a system-wide install). The solution is really simple - rvm-shell is under /
+usr/local/bin - use &lt;code&gt;set :rvm_bin_path, &quot;/usr/local/bin&quot;&lt;/code&gt; in your deploy
+script, and you're away. Clearly this is a bug with RVM putting things where it
+shouldn't, but that's the way of things. And, if I sound a little short, it's
+because I had to all but reinstall RVM and break everything before realizing
+this.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Achievements on Coderwall</title>
+    <link href="http://blog.joshmcarthur.com/2011/07/23/achievements-on-coderwall/"/>
+    <updated>2011-07-23T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/07/23/achievements-on-coderwall</id>
+    <content type="html">&lt;p&gt;Well, it's taken weeks for &lt;a href=&quot;http://coderwall.com&quot;&gt;Coderwall&lt;/a&gt; to finally get
+it's crawler to hit my &lt;a href=&quot;https://github.com/joshmcarthur&quot;&gt;Github Profile&lt;/a&gt;, but
+I've finally &lt;a href=&quot;http://coderwall.com/joshmcarthur&quot;&gt;got more badges&lt;/a&gt;. I've been
+moving some old PHP stuff of mine onto Github for people to use, so that's
+where I've gotten the PHP badge from. As part of my personal campaign to master
+at least one other language apart from Ruby, I've also been working on some
+Django tutorials (Django is a Python web framework), so have earned another
+badge there. A happy accident was the walrus badge - I didn't realize I had
+projects up in so many different languages. Probably next on this list might be
+the 'Forked 20' achievement for my Spree extension, [spree-import-products]
+(https://github.com/joshmcarthur/spree-import-products) - I'm not so sure this
+is a good thing, though - the forks-to-pull-requests ratio is too low on this
+project - most likely indicating that I need to work more on making the
+extension easier to use for my general audience - forks without pull requests
+mean that people are taking their own copies to change them for their needs,
+rather than to work on bugfixes and general improvements. We'll have to see.
+But... yay, more achievements! If you've got a Github account, I highly
+recommend you check out Coderwall - the achievements are largely irrelevant to
+any sort of reputation, but it's a really nice way of finding interesting
+Github members with interesting projects.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Arbitrary Ordering in PostgreSQL when Rails + ENUM = No.</title>
+    <link href="http://blog.joshmcarthur.com/2011/07/14/arbitrary-ordering-in-postgresql-when-rails-enum-no/"/>
+    <updated>2011-07-14T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/07/14/arbitrary-ordering-in-postgresql-when-rails-enum-no</id>
+    <content type="html">&lt;p&gt;I've recently had to do a custom sort for a work project that has required a
+sort on something that is not naturally sortable correctly (For example,
+alphabetical or numerical sorting). While searching for a completely different
+solution, I came across &lt;a href=&quot;http://stackoverflow.com/questions/1309624/%0Asimulating-mysqls-order-by-field-in-postgresql&quot;&gt;this post&lt;/a&gt; that outlined a nice technique.
+Basically, when you have a field in your Rails model with a predefined set of
+possible values, you can use a CASE statement in PostgreSQL to perform the sort
+in whichever order these values should appear. Here's a sample of how this
+could be achieved using Rails: &lt;code&gt;Result.order(&quot;CASE &quot; + &quot;WHEN medal='gold'
+THEN 1 &quot; + &quot;WHEN medal='silver' THEN 2 &quot; + &quot;WHEN medal='bronze' THEN 3 &quot; +
+&quot;ELSE 4 &quot; + + &quot;END,name&quot;)&lt;/code&gt; It's messy of course - how you want to format the
+SQL string is up to you, but it's a great solution when you don't have the
+normal sorting capabilities of a ENUM datatype available to you.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Quick: Clear Gemset</title>
+    <link href="http://blog.joshmcarthur.com/2011/07/10/quick-clear-gemset/"/>
+    <updated>2011-07-10T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/07/10/quick-clear-gemset</id>
+    <content type="html">&lt;p&gt;If you're finding that you have to change something fairly significant in your
+bundler dependencies, it's usually a good idea to get rid of what you've got
+loaded in an RVM gemset so that you don't end up with different versions of
+gems fighting with each other. To do this, simply run &lt;strong&gt;&lt;code&gt;rvm gemset empty&lt;/code&gt;&lt;/strong&gt; -
+it'll delete all the gems currently in your gemset, giving you a blank slate.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>The Dictionary of New Zealand Sign Language</title>
+    <link href="http://blog.joshmcarthur.com/2011/06/27/the-dictionary-of-new-zealand-sign-language/"/>
+    <updated>2011-06-27T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/06/27/the-dictionary-of-new-zealand-sign-language</id>
+    <content type="html">&lt;p&gt;&lt;a href=&quot;http://nzsl.vuw.ac.nz&quot;&gt;The Dictionary of New Zealand Sign Language&lt;/a&gt; went live
+on Friday - it's a project that I have worked on with &lt;a href=&quot;http://%0Awww.danielsherson.com&quot;&gt;Daniel&lt;/a&gt;, Chris and &lt;a href=&quot;http://www.linkedin.com/in/%0Ajamesarobertson&quot;&gt;James R&lt;/a&gt;, at 3Months. I attended a launch event at Victoria University
+on the Friday, and it really was quite a humbling experience - this dictionary
+has been the effort of a team of people for years and years - really, what
+3Months has done has just been the tip of the iceberg. It really does seem like
+this project has been rewarding - we've taken a comprehensive database of sign
+information and images (Built with what seems to be a lot of time and effort by
+&lt;a href=&quot;http://dave.moskovitz.co.nz/2011/06/24/the-online-dictionary-%0Aof-new-zealand-sign-language/&quot;&gt;Dave Moskozitz&lt;/a&gt;), and given it a public presence - hopefully,
+something that everyone can use - whether it's to learn New Zealand Sign
+Language, or just to learn how to finger spell names and words. I'm mostly
+posting this in the hope that everyone who reads this goes to check out the
+site, and to learn something of this language - give it a spin! &lt;a href=&quot;http://nzsl.vuw.ac.nz&quot;&gt;http://
+nzsl.vuw.ac.nz&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>'Password' or 'Passphrase'</title>
+    <link href="http://blog.joshmcarthur.com/2011/06/23/-password-or-passphrase/"/>
+    <updated>2011-06-23T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/06/23/-password-or-passphrase</id>
+    <content type="html">&lt;p&gt;So apparently pass phrases are the new 'secure password' - kinda the step you
+get to when you finally accept that your users are going to use something like
+'password' for their account password. The natural step here is to reinforce a
+secure password strategy by requiring x numbers, x special characters and a
+certain length - but I find this really annoying when I just want to get signed
+up, and that means that other users do as well. Something I've just been
+thinking about is the naming semantics of password field - labeling it
+'password' immediately prompts users to think of an actual word - if they are
+computer-savvy, then they might throw a symbol or number in, but most likely it
+will still be based on an actual word. I wonder what would happen if you
+labelled this field 'Passphrase' though? I think it is inevitable that many
+users will recognize the pattern of the form rather than the labelling of the
+fields and still enter their 'password', but just maybe there will be some
+users who get the semantics of the label, and enter a sentence, instead of a
+word. Even though there may not be special characters in that sentence, it's
+still just as, if not more secure from dictionary attacks - guessing one word
+is pretty easy, but it's much, much harder to guess a string of words, in the
+correct order - especially if one or two of those words are obfuscated with
+some special characters or numbers. Just a thought.... but interesting
+nonetheless.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Rails HABTM relationships on a non-standard connection</title>
+    <link href="http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection/"/>
+    <updated>2011-06-21T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/06/21/rails-habtm-relationships-on-a-non-standard-connection</id>
+    <content type="html">&lt;p&gt;Recently, I've been implementing an admin interface for a system that I want to
+make more secure than the main application. The way I've chosen to do this is
+to run some models that relate solely to the admin application (Authentication
+and Authorization in particular), on a different database - let's call it
+'login'. This seems to be a reasonably common thing to do for security
+purposes, and also for things like moving data from one database to another.
+Once again though, I've been tempted into the potential nest of bugs that is
+has_and_belongs_to_many - let me explain the schema first though: *
+Administrators table - holds email, encrypted passwords and other data about
+administrators * Roles table - holds the name of the role - used to authorizing
+an administrator when performing an action. Each of these tables uses the line
+&lt;code&gt;establish_connection 'login'&lt;/code&gt; to connect to a different database than the
+other models - this is the secure database that I want to leave purely for the
+administrative application. So, given that I had an administrator that should
+be given multiple roles, and obviously each role could have many
+administrators, has_and_belongs_to_many seemed the obvious candidate - I didn't
+really want a model just for the association, and I would just need to write a
+migration to create the join table. So, off, I went, and here's what happened:
+&lt;code&gt;ERROR: relation &quot;administrators_roles&quot; does not exist&lt;/code&gt; i.e. - the
+Administrator table exists, and the Role table exists, but the join table just
+isn't there. The first call for me was to take a look in the database, and make
+sure that the table was there - which it was - and that migrations had
+definitely run correctly and the schema was correct - which they were. After
+much frustration, I found &lt;a href=&quot;http://groups.google.com/group/%0Arubyonrails-talk/browse_thread/thread/7644d9e5f5c6e44a/%0A69c8cce4c39eb571?show_docid=69c8cce4c39eb571&quot;&gt;this thread&lt;/a&gt; which described the problems I
+had been having - and I was vaguely satisfied to see that the problem wasn't
+really my fault. It seems that in some versions of Rails, ActiveRecord's
+has_and_belongs_to_many_association class doesn't respect the database
+connections that the models are trying to use - instead, it uses the universal
+database connection to try and look up the join table - so, what was going
+wrong was that ActiveRecord was looking in the development environment's
+database, when it should have been looking in the login database.
+Unfortunately, short of updating your version of ActiveRecord/Rails or patching
+this class, it seems that there isn't really any way of avoiding this problem -
+you have to drop back to using has_many :through with a Model representing your
+join table. I can, though, at least vouch that once you have done this, it does
+work as expected, which, in the end, is what we want. It still feels a bit
+hacky though....&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Quick: .rvmrc</title>
+    <link href="http://blog.joshmcarthur.com/2011/06/21/quick-rvmrc/"/>
+    <updated>2011-06-21T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/06/21/quick-rvmrc</id>
+    <content type="html">&lt;p&gt;This post is probably something more experienced RVM users will already know,
+but I wanted to post this as it's definitely my discovery of the week. When
+throwing an .rvmrc file into a project, it's a nice thing to do to write the
+script correctly so that it will just work for other developers (As well as
+telling you what gemset you're using when you jump into the directory). In your
+.rvmrc file, put something like this: &lt;code&gt;rvm use 1.9.2@gemset --create&lt;/code&gt; ...this
+will attempt to use that gemset (Printing out a nice message telling you it's
+using that one as it does so), and will create it if it doesn't exist.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Ubuntu: Quick ImageMagick Install</title>
+    <link href="http://blog.joshmcarthur.com/2011/06/16/ubuntu-quick-imagemagick-install/"/>
+    <updated>2011-06-16T00:00:00+12:00</updated>
+    <id>http://blog.joshmcarthur.com/2011/06/16/ubuntu-quick-imagemagick-install</id>
+    <content type="html">&lt;p&gt;[This is cross-posted from a tweet I posted a while back - I think it's a nice
+bit of advice, and I wanted to store it in a more persistent form]
+Installing ImageMagick is one of the things that Rails developers need to do
+reasonably often when provisioning new servers - basically, if you're doing any
+sort of image processing in your application (including the popularPaperclip
+gem), ImageMagick is what you'll be using.
+The problem is that there is a bit of a magical formula I have needed to use in
+the past - if you just install ImageMagick, it will most likely not work, as it
+needs to have support for different image formats you want to use compiled it
+in right from the get go. Previously, I have just looked up the various
+libraries I have needed (For PNG, JPEG, etc.), and then either found the
+libraries in the Ubuntu package repositories or built them from source.Â 
+A nice quick way of doing it though, is to use an ImageMagick meta-package in
+the Ubuntu repositories named libmagick-9-dev - it is just a collection of
+popular image format libraries, as well as a couple of additional utilities for
+ImageMagick. You can install it on any Ubuntu system by running this command:
+sudo apt-get install libmagick-9-dev
+ImageMagick itself still needs to be installed, of course. The best option here
+is just to build from source - packages in the repositories are horribly out of
+date, and I have found Paperclip, RMagick and Minimagick all require a fairly
+recent version of ImageMagick.
+Building from source sounds really intimidating, but it really isn't - just
+follow these steps:
+First of all, download a tarball of the ImageMagick source onto your computer:
+wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz
+Next, extract the tarball:
+tar -xvzf ImageMagick.tar.gz
+Now configure the package - note especially the end of the output (There is a
+lot of output) - it tells you which Image libraries you have installed - any
+with 'yes' next to them it will happily format and convert - because you've
+installed the package above, all the common formats should have a 'yes' next to
+them, but it's worth checking.
+cd ImageMagick-[VERSION] (VERSION will be a series of numbers like '6.7.0-8')
+./configure
+Now all the hard work (By you) is done - you just need to compile the packages:
+make &amp;amp;&amp;amp; sudo make install
+All done! - ImageMagick should be all installed. To check, run the command
+which identify, and check it returns a path to the 'identify' command.
+Note: If you have trouble compiling, make sure Ubunutu's build tools are
+installed: sudo apt-get install build-essential&lt;/p&gt;
+</content>
+  </entry>
+  
+</feed>

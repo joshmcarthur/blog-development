@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/page/7/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/04/12/i-just-found-this-it-s-a-little-promotional-thing-that-the/">I Just Found This - It&#8217;s a Little Promotional Thing That The&#8230;</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-04-12T00:00:00+12:00" pubdate  data-updated="true" >Apr 12<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[/images/assets/www.tumblr.com/photo/1280/4533787560/1/
+tumblr_ljiap6hYwQ1qd78lu.jpg]
+I just found this - it&#8217;s a little promotional thing that the (now non-existent)
+VUW (Victoria University of Wellington IT Society) did (Well, me and Eddy) to
+try and get people to join up (It worked.) - basically, I built a little IR
+pen, and using a Wiimote, we managed to make a nice little giant touchscreen.
+Granted, it needed calibrating often, and the correct body posture and hand
+position took some finding, but it was definately a fun experiment to try out.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/04/12/accessing-controller-instance-variables-in-model-urgh/">Accessing Controller Instance Variables in Model (Urgh?)</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-04-12T00:00:00+12:00" pubdate  data-updated="true" >Apr 12<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I can tell that this title alone will irritate a lot of developers out there.
+It irritated me as well, until I figured out that sometimes, doing things the
+&#8216;wrong&#8217; way is the best/only way. But let me get on with things.
+Every now and then, you will come across a scenario where you need to access
+something in the controller, from the model. This is so obviously non-MVC that
+many will (should) immediately shy away from it, but let me suggest a scenario.
+Let&#8217;s say you have users, who should be scoped to a particular subdomain. You
+would place a default_scope on the User model (with a Proc, once an issue with
+default_scope is resolved), that would automatically add conditions to any
+database lookup calls to restrict the found users to those belonging to the
+current subdomain. The tricky bit is, of course to get this subdomain. Because
+it is a default scope, you don&#8217;t actually &#8216;call&#8217; it - so that rules out passing
+parameters. I&#8217;ve come across other suggestions as well, such as using
+cattr_accessor (NO! It&#8217;s shared across requests), and storing a value in
+Thread.current (Relying on the application using threads in the way you expect
+them to = not safe). So far though, the best hint I have seen here, although
+extremely anti-doing what I am suggesting, would seem to work.Â 
+Basically, the jist of this post was that you could dynamically add methods to
+ActiveRecord::Base using an around_filter to access sessions, cookies, params
+and the request. Now, I agree that this might be a bit too extreme - if you
+really need to access the entire session or cookie hash, for example, you
+probably aredoing something wrong. Something that I think isÂ suitable though,
+given an appropriate situation, is to use this technique to add an &#8216;accessor&#8217;
+to ActiveRecord::Base that returns the value you need in your model - the
+current subdomain for instance. This is still non-MVC, but is, I think, a far
+more elegant solution that anything else I&#8217;ve seen suggested.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/04/08/i18n-always-escapes-dots-in-chained-backends/">I18n ALWAYS Escapes Dots in Chained Backends :-(</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-04-08T00:00:00+12:00" pubdate  data-updated="true" >Apr 8<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a quick tip I&#8217;ve come across while browsing through the comments on a
+Railscast_I&#8217;ve_been_watching. It looks like the I18n gems that get
+automatically installed with Rails 3 have a teensy bug.
+When storing a translation to the backend (be it YAML, Redis, whatever), there
+is an :escape option that can be passed to enable (or prevent) the key from
+containing the dot character (.) (Among others, I&#8217;m sure). This seems to work
+fine when dealing with a single backend, but unfortunately when you are using
+chained backends (For example I am using Redis preferentially, but falling back
+on YAML when necessary), the options hash that you would pass the :escape
+option in is mistakenly initialized to an empty hash.
+It&#8217;s a simple fix - there is already a closed pull request on the issue here.
+It looks like the latest stable version is only 0.50 though, so the fix isn&#8217;t
+going to filter through to the actual gem just yet. For now, the best option is
+probably to class_eval into that particular section, or just change the file
+yourself.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/10/spree-hosted-gateway/">Spree Hosted Gateway</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-10T00:00:00+13:00" pubdate  data-updated="true" >Mar 10<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Spree Hosted Gateway is my second &#8216;big&#8217; extension - one of the ones that isn&#8217;t
+just adding one or two bits of nice functionality, but actually and end-to-end
+solution to add something that I think would be useful to a broad range of
+Spree developers (My first was spree-import-products, see my post on it here).
+Spree (for those of you unfamiliar with it), is an open-source eCommerce
+framework written in Ruby on Rails, and has recently been upgraded to Rails 3,
+which has enabled extensions to now be packaged as Rails engines, making them
+far easier to create, implement and share. Out of the box, Spree is able to
+provide much of what a basic online store requires, but something I have felt
+is missing is support for alternative payment methods that are much more
+rudimentary than those catered for by Railsdog&#8217;s_fork_of_ActiveShipping.Â 
+Inspired by a project I was working on at 3Months, I decided to develop an
+extension that provided a new type of Payment Method (Alongside Cheque and
+Creditcard) - External (Or Hosted) Gateway - this type of payment method was
+characterized in the following ways:</p>
+
+<pre><code>* Redirection - the customer was required by the gateway to be redirected
+  to an off-site form to make payment.
+* Tracing the payment and order: attributes required for payment (Amount,
+  etc.) were gathered by the payment gateway from POSTed form data.
+* Communications: there was no type of complex back-and-forth between Spree
+  and the gateway provider behind the scenes - information was transmitted
+  to the gateway, and all Spree is able to do from that point is listen for
+  a postback and collect any information from that.
+</code></pre>
+
+<p>These type of gateways are (unfortunately) quite prevalent, especially around
+small-to-medium independent companies - they tend to be cheaper than more
+widely-known solutions, at the expense of a more reliable and secure
+transaction for the customer.
+Spree Hosted Gateway, as I have mentioned, hooks into Spree in the form of
+registering itself as a Payment Method that can be configured from the admin
+interface. After seeing all theÂ arbitraryÂ information that I was required to
+POST to the payment gateway I was testing against, I also made it easily
+extendable, and used Spree&#8217;s preferences system to allow any number of key-
+value pairs to be created (Which could be modified in the Spree Admin UI),
+which are automatically posted to the payment gateway when I customer is
+redirected (Unless the preference key is added to the exclusion list, of
+course!).
+I conjunction to the &#8216;transmit&#8217; function of the extension, I have also
+implemented a kind of &#8216;landing pad&#8217; for postbacks from the Payment Gateway to
+hit. When this happens, the extension is able to detect whether the transaction
+was successful or not, and continue processing the order. If the customer has
+made an payment that is not sufficient to cover the cost of the order they are
+redirected back to the payment page, and if the transaction was not successful,
+an error message is presented to them.
+All in all, I&#8217;m happy with this extension - it was a great way to learn about
+how Spree itself handles payment methods, different types of gateway and
+payment validation and handling, and I&#8217;m hoping this extension will help out
+some of the Spree developers out there working on smaller stores that don&#8217;t
+need such a large (expensive) gateway.</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/8/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/6/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

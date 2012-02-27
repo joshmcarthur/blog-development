@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Generating 'Gem Install' Commands From 'Gem List' - blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-03T16:34:00+13:00" pubdate  data-updated="true" >Nov 3<span>rd</span>, 2011</time></p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here at <a href="http://3months.com">3Months</a>, we have a couple of monolithic projects that have been around for yonks - because of this, they don&#8217;t have bundler set up, and many of them have incomplete or out-of-date gem requirements. Yesterday I needed to get one of these projects set up locally for the first time, so I was kindly lent the output of <code>gem list</code> with which to install the gems at the correct versions required.</p>
+
+<p>To make this problem a little easier in the future, I wrote a quick script to generate a massive shell command to install all the gems recorded in <code>gem list</code>. Next time I, or someone else, needs to set up one of these types of project, I can run this script, and hand them the generated shell script. They can run this in their gemset of choice, and install all gems required - much easier!</p>
+
+<p>Here&#8217;s the script - alternatively, you can check it out the <a href="https://gist.github.com/1335721">Gist</a>:</p>
+
+<div><figure role=code> <div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+<span class='line'>19</span>
+<span class='line'>20</span>
+<span class='line'>21</span>
+<span class='line'>22</span>
+<span class='line'>23</span>
+<span class='line'>24</span>
+<span class='line'>25</span>
+<span class='line'>26</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1">#!/usr/bin/env ruby</span>
+</div><div class='line'>
+</div><div class='line'>
+</div><div class='line'><span class="c1">### gem_to_command.rb ###############################################################</span>
+</div><div class='line'><span class="c1"># Produce a command to install the gems you currently have installed (using gem list)</span>
+</div><div class='line'><span class="c1"># Makes a simple Shell script that can be run on Linux or Mac OS X</span>
+</div><div class='line'><span class="c1"># </span>
+</div><div class='line'><span class="c1"># Author: @sudojosh</span>
+</div><div class='line'><span class="c1">######################################################################################</span>
+</div><div class='line'>
+</div><div class='line'><span class="n">gems</span> <span class="o">=</span> <span class="sb">`gem list`</span>
+</div><div class='line'><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;install_gems.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">script</span><span class="o">|</span>
+</div><div class='line'>  <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;#!/usr/bin/env ruby</span><span class="se">\n</span><span class="s2">&quot;</span>
+</div><div class='line'>  <span class="n">gems</span> <span class="o">=</span> <span class="n">gems</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">gem</span><span class="o">|</span>
+</div><div class='line'>    <span class="n">gem</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">part</span><span class="o">|</span>
+</div><div class='line'>      <span class="n">part</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[^\w\.\-]/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</div><div class='line'>    <span class="p">};</span>
+</div><div class='line'>    <span class="o">[</span><span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="n">gem</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="o">].</span><span class="n">min</span><span class="o">]</span>
+</div><div class='line'>
+</div><div class='line'>  <span class="p">}</span>
+</div><div class='line'>  <span class="n">gems</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">gem</span><span class="o">|</span>
+</div><div class='line'>    <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;gem install </span><span class="si">#{</span><span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="si">}</span><span class="s2"> -v=</span><span class="si">#{</span><span class="n">gem</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</div><div class='line'>    <span class="n">script</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot; &amp;&amp; &quot;</span> <span class="k">unless</span> <span class="n">gem</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">gems</span><span class="o">.</span><span class="n">last</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</div><div class='line'>  <span class="p">}</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'><span class="nb">puts</span> <span class="s2">&quot;Wrote install_gems.sh&quot;</span>
+</div></code></pre></td></tr></table></div></figure></div>
+
+
+<p>Here&#8217;s what it does:</p>
+
+<ul>
+<li>Get the output of <code>gem list</code></li>
+<li>Open a .sh file for writing</li>
+<li>Iterate through the <code>gem list</code> output, and parse from the file the name of the gem and the lowest version number (lowest is safer than highest, even though there <em>should</em> only ever be one)</li>
+<li>Assemble a <code>gem install</code> command with the <code>--no-rdoc --no-ri</code> arguments, and write this to the file.</li>
+</ul>
+
+
+<p>Enjoy!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">@sudojosh</span></span>
+
+      
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-03T16:34:00+13:00" pubdate  data-updated="true" >Nov 3<span>rd</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/" data-via="sudojosh" data-counturl="http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread"><div id="disqus_thread"></div>
+<script type="text/javascript">
+  var disqus_shortname = 'blog-joshmcarthur';
+  var disqus_identifier = 'http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/';
+  var disqus_url = 'http://blog.joshmcarthur.com/2011/11/03/generating-gem-install-commands-from-gem-list/';
+  //var disqus_developer = 1;
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>blog.joshmcarthur.com</title>
+  <meta name="author" content="@sudojosh">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://blog.joshmcarthur.com/page/3/index.html"/>
+  <link href="/favicon.ico" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="blog.joshmcarthur.com" type="application/atom+xml"/>
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+
+<body  >
+  <div id="container">
+      <header><hgroup>
+  <h1><a href="/">blog.joshmcarthur.com</a></h1>
+  
+</hgroup>
+
+
+
+</header>
+
+      <div id="main" role="main">
+        <div id="content">
+          <div class="blog-index">
+
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/23/howto-database-backup-and-restore/">Howto: Database Backup and Restore</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-09-23T13:26:00+12:00" pubdate  data-updated="true" >Sep 23<span>rd</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>An inherent part of developing web applications is managing your datastores - typically, a relational database such as MySQL or PostgreSQL. Today, I&#8217;m going to quickly cover off how to backup and restore for both of these databases.</p>
+
+<h2>What you&#8217;ll need</h2>
+
+<ul>
+<li>Either PostgreSQL or MySQL</li>
+<li>Access to a database (preferably one with data in it)</li>
+</ul>
+
+
+<h2>Why this is useful to know</h2>
+
+<p>Lots of interactions with databases have the potential to destroy or modify data (in a bad way). When using frameworks such as Ruby on Rails, it&#8217;s even easier to, say, accidently delete all of your Users (Horribly easy in DataMapper, unfortunately). It&#8217;s important that before you do anything with data that&#8217;s destructive, you have a backup of your database that you can restore from quickly and easily.</p>
+
+<h2>PostgreSQL</h2>
+
+<p>Postgres databases are backed up using the <code>pg_dump</code> command - a command-line utility that comes packaged with the database server. Here&#8217;s the command:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+</pre></td><td class='code' width='100%'><pre><code class='sh'><div class='line'>pg_dump --no-owner -U <span class="o">[</span>username<span class="o">]</span> -W <span class="o">[</span>database_name<span class="o">]</span> &gt; <span class="o">[</span>file to dump to<span class="o">]</span>.sql.dump
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Let me explain these options and why I use them:</p>
+
+<ul>
+<li><code>--no-owner</code>: By default, Postgres dumps the database with lots of SET OWNER TO statements. I like to take these out of the dump, as I&#8217;m not necessarily restoring the dump to exactly the same server with exactly the same users. Using &#8211;no-owner means that ownership statements will be excluded.</li>
+<li><code>-U [username]</code>: This lets you pass in the database user name your web application usually uses to connect - using this is just good practise, as it ensures that what you&#8217;re dumping is exactly what the web application has.</li>
+<li><code>-W</code>: This option, used in conjunction with the <code>-U</code> flag, prompts for the password when you run the command</li>
+<li><code>[database_name]</code>: This is the name of the database that you want to dump</li>
+<li><code>[file to dump to]</code>: This is the file that the SQL script that pg_dump produces will be piped into. I normally name this file with the <code>.sql.dump</code> extension, so that I can see it&#8217;s a SQL dump straight off.</li>
+</ul>
+
+
+<h4>Restoring a database dump</h4>
+
+<p>Restoring a Postgresql dump is really easy, and involves using the standard <code>psql</code> client to connect to the database and execute the SQL script in your dump file.</p>
+
+<p>First of all, make sure that you have created the database you want to load the data into. In this example, let&#8217;s say I&#8217;ve dumped from the <code>facebook_production</code> database to the file <code>facebook_production_23092011.sql.dump</code>, and I want to restore into the <code>facebook_development</code> database so that I can test out some code against some production data. I want to connect to the database using psql as the web application user, and load the dump in:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+</pre></td><td class='code' width='100%'><pre><code class='sh'><div class='line'>psql -U facebook -W facebook_development &lt; facebook_production_23092011.sql.dump<span class="sb">`</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Note how I am using the opposite of the less-than symbol I used above - this basically denotes the direction of the data - it&#8217;s coming <em>from</em> the file, going <em>to</em> the database.</p>
+
+<p>Upon running this commmand (with your own database, of course), you will first be prompted for your database user&#8217;s password, and will then see a bunch of SQL statements being executed. Once it&#8217;s completed, your database has been loaded successfully - you can jump in using psql if you&#8217;d like, and query around a bit.</p>
+
+<h2>MySQL</h2>
+
+<p>MySQL databases are backed up with the <code>mysqldump</code> program - one I&#8217;m not as familiar with as Postgres, but I know the basics, and largely that&#8217;s all you need with this type of thing. The main thing to keep in mind is that the process is the same as for PostgreSQL above - use the dump program to write the database out to a file (in the form of SQL statements), and then use the database client program <code>mysql</code> in this case, to execute the commands in the file against the database being restored to. Here&#8217;s the command to dump a MySQL file to disk:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+</pre></td><td class='code' width='100%'><pre><code class='sh'><div class='line'>mysqldump -U <span class="o">[</span>username<span class="o">]</span> -P <span class="o">[</span>database_name<span class="o">]</span> &gt; <span class="o">[</span>file to dump to<span class="o">]</span>.sql.dump
+</div></code></pre></td></tr></table></div></figure>
+
+<p>The options are more or less as I&#8217;ve described above, except that <code>-P</code> is substituted for <code>-W</code>, and I&#8217;ve still stuck with the <code>.sql.dump</code> naming scheme.</p>
+
+<h4>Restoring a database dump</h4>
+
+<p>This process is almost identical to the PostgreSQL restore process. Let&#8217;s stick with the same example format we already have - dumping from a database called <code>facebook_production</code> to file <code>facebook_production_23092011.sql.dump</code>, restoring into a database called <code>facebook_development</code> - here&#8217;s the command we need for that:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+</pre></td><td class='code' width='100%'><pre><code class='sh'><div class='line'>mysql -U facebook -P facebook_development &lt; facebook_production_23092011.sql.dump
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Once again, you&#8217;ll be prompted for your password, but for this one you won&#8217;t see the output of the SQL statements - it will take a couple of seconds, and then the program will exit. This is normal however - if you&#8217;d like to see the output of the batch load, you can add <code>-v -v -v</code> before the <code>&lt;</code> symbol to turn verbosity to level three, otherwise you can go ahead and jump into your database and make sure everything is there.</p>
+
+<h2>Tips:</h2>
+
+<ul>
+<li>If you don&#8217;t have a database user account yet, on Unix and Linux you can use <code>sudo su postgres</code> to login as the &#8216;postgres&#8217; user - a root-like database user that gets created for you when Postgres is installed. MySQL has a root account, but it&#8217;s not a system user - you are normally prompted for a root username and password when you install MySQL. If you <em>are</em> using the Postgres user, you don&#8217;t need to pass in a username or password in the above commands, but you need to remember that your restored databases will be owned by &#8216;postgres&#8217;, not you web application database user.</li>
+<li>A handy place to put database dumps that you are planning to use right away is <code>/tmp</code> (Only on Unix and Linux). This is a directly that is writeable by everyone, that will get &#8216;garbage collected&#8217; periodically. This is especially handy if you are logging in as the &#8216;postgres&#8217; user, as typically this user won&#8217;t have write permissions on many other directories</li>
+</ul>
+
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/14/introducing-blog-broadcaster/">Introducing Blog Broadcaster</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-09-14T19:04:00+12:00" pubdate  data-updated="true" >Sep 14<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve just completed a Blog Broadcaster for this blog. It had a couple of interesting technical things, and I needed to test it properly, so here&#8217;s this post!</p>
+
+<p>I recently migrated this blog from <a href="http://tumblr.com">Tumblr</a>, and while Tumblr was pretty awesome and easy to use, it didn&#8217;t have great support for blocks of code and preformatted comment, and, like <a href="http://www.radiantcms.org">Radiant CMS</a>, it stored layouts, stylesheets, and all of that kind of thing in a database somewhere - it wasn&#8217;t in source control, and making changes to it was dangerous.</p>
+
+<p>One thing that I immediately missed from Tumblr, however, was it&#8217;s ability to post to Facebook and Twitter automatically whenever I published a post. As I don&#8217;t post that often, it&#8217;s really important to me that I market my blog as much as I can - like my Github profile, the content on my blog is a reflection of my knowledge and skill as a developer, and so I want to get that in front of people as much as possible - broadcasting to social networks is a great way of achieving that.</p>
+
+<p>With my blog on Github, I needed a way to broadcast new posts to these social networks. Github has a built-in post-receive hook to post to Twitter, but I really needed something more than that. Here&#8217;s my list of requirements:</p>
+
+<ul>
+<li>It should automatically post without me needing to do any special task</li>
+<li>It should be conditional - i.e. it shouldn&#8217;t post <em>everytime</em> I change something</li>
+<li>It should support both Facebook and Twitter</li>
+<li>It should be able to be triggered by a commit</li>
+</ul>
+
+
+<p>What I ended up building was a Sinatra app whose sole purpose was to receive POST&#8217;ed commit information, parse it into a Facebook and Twitter post, and broadcast it. It&#8217;s hosted on Heroku, and gets triggered by a Github <a href="http://help.github.com/post-receive-hooks/">Post-Receive Hooks</a>. I did run into a couple of problems along the way - the main one was sorting out being able to post Facebook updates without being logged in, or even needing to be involved at the process at all. This wasn&#8217;t too difficult, but I did need to get an access token that was long-lived, and have the ability to update this if necessary. I overcame this problem by adding some methods to my Sinatra app that will allow me to update the access token if it ever expires, or change the Facebook account used if necessary.</p>
+
+<p>The second problem I ran into wasn&#8217;t really a problem, but it was a challenge to try and think of a nice way of doing it. Basically I needed to store the Facebook access token somewhere so that I could use it when I needed it - but I didn&#8217;t have a database, and I didn&#8217;t particularly want to add one just for storing a single string. Since this is running on Heroku (Bamboo stack, not Cedar), I was also on a read-only filesystem, so couldn&#8217;t store it in a simple text file either. In this end, I chose to store the value in Memcache using the Heroku add-on. This still isn&#8217;t necessarily a good solution, as this storage method isn&#8217;t guaranteed to be persistent, however it should suit my needs - it doesn&#8217;t particularly matter if I lose the access token, the application will gracefully degrade and just post to Twitter until I log in to Facebook via the app again.</p>
+
+<p>So, I think I&#8217;ve come up with a good solution. It started off as a simple broadcaster for my blog, but I think it has a lot of potential for use with any open-source project that has social networking presence - I think it&#8217;s a much more elegant and flexible hook than that which Github provides, and I hope it get&#8217;s a bit of use.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/09/09/select-anything-from-everything/">Select Anything From Everything With Select</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-09-09T00:00:00+12:00" pubdate  data-updated="true" >Sep 9<span>th</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was recently called upon to make a horrible select input for a Ruby on Rails project - essentially, there was this model, let&#8217;s call it a Snafu, and one Snafu could share an attachment to any number of models.</p>
+
+<p>This select was difficult because I couldn&#8217;t just have a selection of record ID&#8217;s - I would have to use both the model type <strong>as well as</strong> the model ID in order to be able to track down these records when the form was submitted. Here&#8217;s how I did it:</p>
+
+<p><strong>Step 1: Rendering the select </strong>
+First of all, we need to render a selection box for the &#8216;New Snafu&#8217; form. This selection box should be populated by a number of model collections, keyed by an identifier that specifies both the model name and the model ID. Time for a model method, and a helper!</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="k">def</span> <span class="nf">options_for_select_anything</span><span class="p">(</span><span class="n">selected</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+</div><div class='line'> <span class="c1">#Make a hash of the things we want to select from</span>
+</div><div class='line'> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+</div><div class='line'>  <span class="s1">&#39;Foo&#39;</span> <span class="o">=&gt;</span> <span class="no">Foo</span><span class="o">.</span><span class="n">active</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">item_for_select_anything</span><span class="p">),</span>
+</div><div class='line'>  <span class="s1">&#39;Bar&#39;</span> <span class="o">=&gt;</span> <span class="no">Bar</span><span class="o">.</span><span class="n">active</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="n">item_for_select_anything</span><span class="p">)</span>
+</div><div class='line'> <span class="p">}</span>
+</div><div class='line'> <span class="c1">#Use a Rails helper to actually get the tags</span>
+</div><div class='line'> <span class="n">grouped_options_for_select</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">selected</span><span class="p">)</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'><span class="k">def</span> <span class="nf">item_for_select_anything</span>
+</div><div class='line'> <span class="c1"># Return an array of the record name and the identifier we want to use</span>
+</div><div class='line'> <span class="c1"># The record name in this case is the display value, while the identifier</span>
+</div><div class='line'> <span class="c1"># is the data value</span>
+</div><div class='line'> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">record</span><span class="o">|</span> <span class="o">[</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="n">record</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">]</span> <span class="p">}</span>
+</div><div class='line'><span class="k">end</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Now that we have these helpers, we have a grouped collection of options, in which each option tag within the select will look something like &#8217;<code>&lt;option value="1-Foo"&gt;Foo #1&lt;/option&gt;</code>&#8217; - let&#8217;s render our select.</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+</pre></td><td class='code' width='100%'><pre><code class='erb'><div class='line'><span class="cp">&lt;%</span> <span class="n">form_for</span> <span class="vi">@snafu</span> <span class="k">do</span> <span class="o">|</span><span class="n">form</span><span class="o">|</span> <span class="cp">%&gt;</span><span class="x"></span>
+</div><div class='line'><span class="x">    &lt;p&gt;</span>
+</div><div class='line'><span class="x">        </span><span class="cp">&lt;%=</span> <span class="n">form</span><span class="o">.</span><span class="n">label</span> <span class="ss">:item_identifier</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span> <span class="cp">%&gt;</span><span class="x">&lt;br /&gt;</span>
+</div><div class='line'><span class="x">        </span><span class="cp">&lt;%=</span> <span class="n">form</span><span class="o">.</span><span class="n">select</span> <span class="ss">:item_identifier</span><span class="p">,</span> <span class="n">options_for_select_anything</span> <span class="cp">%&gt;</span><span class="x"></span>
+</div><div class='line'><span class="x">    &lt;/p&gt;</span>
+</div><div class='line'><span class="x">    &lt;p&gt;</span>
+</div><div class='line'><span class="x">        </span><span class="cp">&lt;%=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span> <span class="s1">&#39;Create&#39;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</div><div class='line'><span class="x">    &lt;/p&gt;</span>
+</div><div class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>This is a basic form of course - your form will have all the other attributes you need, but the key thing to notice here is that we aren&#8217;t trying to load against our Polymorphic &#8216;item&#8217; association within the form - instead, we&#8217;re just going to send through a &#8216;item_identifier&#8217; parameter that we can use to <em>find</em> the item in our model. Let&#8217;s take a look at the sections we need.</p>
+
+<p>First of all, we need to have the Polymorphic association in our model, if you haven&#8217;t already done this.</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># Snafu.rb</span>
+</div><div class='line'>
+</div><div class='line'><span class="k">class</span> <span class="nc">Snafu</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</div><div class='line'>    <span class="c1"># Snip</span>
+</div><div class='line'>    <span class="n">belongs_to</span> <span class="ss">:item</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</div><div class='line'>    <span class="c1"># Snip</span>
+</div><div class='line'><span class="k">end</span>
+</div><div class='line'>
+</div><div class='line'><span class="c1"># Migration</span>
+</div><div class='line'><span class="n">add_column</span> <span class="ss">:snafus</span><span class="p">,</span> <span class="ss">:item_id</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">:null</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+</div><div class='line'><span class="n">add_column</span> <span class="ss">:snafus</span><span class="p">,</span> <span class="ss">:item_type</span><span class="p">,</span> <span class="ss">:string</span><span class="p">,</span> <span class="ss">:null</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Next of all, we need to add an <code>attr_writer</code> to our model - this will hold the &#8216;item_identifier&#8217; from our form submission until we are ready to use it.</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># Snafu.rb</span>
+</div><div class='line'>
+</div><div class='line'><span class="kp">attr_writer</span> <span class="ss">:item_identifier</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Finally, we need to add a <code>before_validation</code> filter to associate the record identified by our item_identifier with our model instance:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+<span class='line'>10</span>
+<span class='line'>11</span>
+<span class='line'>12</span>
+<span class='line'>13</span>
+<span class='line'>14</span>
+<span class='line'>15</span>
+<span class='line'>16</span>
+<span class='line'>17</span>
+<span class='line'>18</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># Snafu.rb</span>
+</div><div class='line'><span class="k">class</span> <span class="nc">Snafu</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</div><div class='line'>    <span class="c1"># Snip</span>
+</div><div class='line'>    <span class="n">belongs_to</span> <span class="ss">:item</span><span class="p">,</span> <span class="ss">:polymorphic</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</div><div class='line'>    <span class="n">before_validation</span> <span class="ss">:set_item</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="kp">attr_writer</span> <span class="ss">:item_identifier</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="c1"># Snip</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="kp">private</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="k">def</span> <span class="nf">set_item</span>
+</div><div class='line'>        <span class="k">if</span> <span class="nb">self</span><span class="o">.</span><span class="n">item_identifier</span>
+</div><div class='line'>        <span class="nb">id</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">item_identifier</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+</div><div class='line'>        <span class="nb">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="no">Kernel</span><span class="o">.</span><span class="n">const_get</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:find</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span> <span class="k">rescue</span> <span class="kp">nil</span>
+</div><div class='line'>    <span class="k">end</span>
+</div><div class='line'> <span class="k">end</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>Let&#8217;s take a look at what we&#8217;ve done there - really, the meat of it is in our set_item method, that gets called before validations run (so that we will have a real item set before we may need to run validations on that item). First of all, set_item checks that we have set a item_identifier - if we haven&#8217;t we don&#8217;t want to run into Nil exceptions! Given an item_identifier is present, we want to split our identifier (Remember, this is in the format id-class name), into two parts. Finally, we do a little Ruby magic to get the class using Kernel.const_get, and then call <code>find</code> on it with the ID that we want. If anything goes wrong with this bit (The class not existing, for example), then we just set item to nil.</p>
+
+<p>There we have it then - it&#8217;s a horrible situation, but I feel like it&#8217;s a pretty good approach. The logic is where it should be (models and helpers), the views and controllers feel clean, and it&#8217;s flexible to be reused pretty easily.</p>
+
+<p>As a final tweak, there&#8217;s one more change you may want to make - that is setting the selected item when we return to our form. If you take a look at the helper method we defined above, you&#8217;ll notice that we already support a selected option - we just need to pass this in. To do this, we want to add a method to our &#8216;Snafu&#8217; class that will return a string of the item id and the item name concatenated with a dash - i.e., the format that our select box in the form is expecting. Go ahead and add the method now:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+<span class='line'>4</span>
+<span class='line'>5</span>
+<span class='line'>6</span>
+<span class='line'>7</span>
+<span class='line'>8</span>
+<span class='line'>9</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># Snafu.rb</span>
+</div><div class='line'>
+</div><div class='line'><span class="k">def</span> <span class="nf">item_identifier</span>
+</div><div class='line'>    <span class="c1"># Return the owner_identifier set using the attr_writer, if it exists</span>
+</div><div class='line'>    <span class="k">return</span> <span class="vi">@owner_identifier</span> <span class="k">if</span> <span class="vi">@owner_identifier</span>
+</div><div class='line'>
+</div><div class='line'>    <span class="c1"># Otherwise, try and build it from the current item saved against the model</span>
+</div><div class='line'>    <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">present?</span>
+</div><div class='line'><span class="k">end</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>With that method, can can just change our select input in the form to make use of this value:</p>
+
+<figure role=code><div class="highlight"><table cellpadding="0" cellspacing="0"><tr><td class="gutter"><pre class="line-numbers"><span class='line'>1</span>
+<span class='line'>2</span>
+<span class='line'>3</span>
+</pre></td><td class='code' width='100%'><pre><code class='ruby'><div class='line'><span class="c1"># new.html.erb</span>
+</div><div class='line'><span class="c1"># Snip</span>
+</div><div class='line'><span class="o">&lt;%=</span> <span class="n">form</span><span class="o">.</span><span class="n">select</span> <span class="ss">:item_identifier</span><span class="p">,</span> <span class="n">options_for_select_anything</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">item_identifier</span><span class="p">)</span> <span class="o">%&gt;</span>
+</div></code></pre></td></tr></table></div></figure>
+
+<p>There we are! Now when we show the form, the selected item will appear, just as we wanted.</p>
+</div>
+  
+  
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/08/22/capistrano-rvm-shell-command-not-found-error/">Capistrano Rvm-shell: Command Not Found Error</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-08-22T00:00:00+12:00" pubdate  data-updated="true" >Aug 22<span>nd</span>, 2011</time></p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve just come across this problem, and I had to share it here - I can&#8217;t find
+anywhere else on the the Internet where the solution is specifically stated -
+it&#8217;s just alluded towards. If you are using RVM&#8217;s Capistrano integration, you
+may come across a CommandNotFoundError to do with rvm-shell not being under /
+usr/local/rvm/bin (Which is exactly where it should be). Upon searching the
+internet, you will find that you have to upgrade RVM (you don&#8217;t), and that when
+installed for a local user, RVM puts rvm-shell under ~/bin (But, you know, it&#8217;s
+a system-wide install). The solution is really simple - rvm-shell is under /
+usr/local/bin - use <code>set :rvm_bin_path, "/usr/local/bin"</code> in your deploy
+script, and you&#8217;re away. Clearly this is a bug with RVM putting things where it
+shouldn&#8217;t, but that&#8217;s the way of things. And, if I sound a little short, it&#8217;s
+because I had to all but reinstall RVM and break everything before realizing
+this.</p>
+</div>
+  
+  
+
+
+  </article>
+
+<nav role="pagination">
+  <div>
+    
+      <a class="prev" href="/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/2/">Newer &rarr;</a>
+    
+  </div>
+</nav>
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-joshmcarthur';
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+</div>
+<aside role=sidebar>
+  
+    <section>
+  <h1>Search</h1>
+  <form action="http://google.com/search" method="get" class="search">
+    <fieldset role="site-search">
+      <input type="hidden" name="q" value="site:blog.joshmcarthur.com" />
+      <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    </fieldset>
+  </form>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2012/02/28/git-browse-for-quick-repo-viewing/">Git-browse for Quick Repo Viewing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/14/upcoming-ratemycourses/">Upcoming: RateMyCourses</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/12/add-jquery-to-any-page/">Add jQuery to Any Page Really, Really Easily</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/11/03/generating-gem-install-commands-from-gem-list/">Generating &#8216;Gem Install&#8217; Commands From &#8216;Gem List&#8217;</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/10/20/a-fun-little-bookmarklet/">A Fun Little Bookmarklet</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Github Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joshmcarthur">@joshmcarthur</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joshmcarthur',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("sudojosh", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/sudojosh" class="twitter-follow-button" data-width="208px" data-show-count="false">Follow @sudojosh</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
+        </div>
+      </div>
+      <footer><p>
+  Copyright &copy; 2012 - <a href="http://twitter.com/sudojosh">@sudojosh</a>
+</p>
+<p class="credits">
+  <span class="octopress"><a href="http://octopress.org/">Octopress</a> powers this blog!</span>
+  <span class="subtlepatterns"><a href="http://twitter.com/dwaseem">Waseem Dahman</a> made this beautiful background!</span>
+<p>
+
+</footer>
+  </div>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+</body>
+</html>
+
